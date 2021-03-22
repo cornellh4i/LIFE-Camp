@@ -25,8 +25,8 @@ class User(db.Model):
 @app.route('/user/<search_name>/')
 def get_user(search_name):
     user = User.query.filter_by(name=search_name).first()
-    return {'id': user.id, 'user': user.name, 'age': user.age, 'occupation': user.occupation, 
-    'location': user.location, 'needs': user.needs}
+    return str({'id': user.id, 'user': user.name, 'age': user.age, 'occupation': user.occupation, 
+    'location': user.location, 'needs': user.needs})
    #return render_template('show_user.html', user=user)
 
 @app.route('/location/')
