@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
+import json
 from itertools import chain
 
 app = Flask(__name__)
@@ -8,49 +9,117 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 
 db = SQLAlchemy(app)
 
+# generalized response formats
+def success_response(data, code=200):
+    return json.dumps({"success": True, "data": data}), code
+
+def failure_response(message, code=404):
+    return json.dumps({"success": False, "error": message}), code
+
+
+surveyq_table = db.Table("survey_question", db.Model.metadata,
+    db.Column("survey_id", db.Integer, db.ForeignKey("survey.s_id")),
+    db.Column("q_id", db.Integer, db.ForeignKey("questions.q_id"))
+    )
+
+user_survey = db.Table("user_survey", db.Model.metadata,
+    db.Column("user_id", db.Integer, db.ForeignKey("user.user_id")),
+    db.Column("survey_id", db.Integer, db.ForeignKey("survey.s_id"))
+)
+
 
 class User(db.Model):
+    __tablename__ = "user"
     id = db.Column('user_id', db.Integer, primary_key=True)
     name = db.Column('name', db.String(100))
     age = db.Column('age', db.Integer)
     occupation = db.Column('occupation', db.String(50))
     location = db.Column('location', db.String(100))
     needs = db.Column('needs', db.String(500))
+    surveys = db.relationship("Survey", secondary=user_survey, back_populates="survey")
 
-    def __init__(self, name, age, occupation, location, needs):
-        self.name = name
-        self.age = age
-        self.occupation = occupation
-        self.location = location
-        self.needs = needs
+    def __init__(self, **kwargs):
+        self.name = kwargs.get("name")
+        self.age = kwargs.get("age")
+        self.occupation = kwargs.get("occupation")
+        self.location = kwargs.get("location")
+        self.needs = kwargs.get("needs")
 
+    def serialize(self):
+        return {
+            "name": self.name,
+            "age": self.age,
+            "occupation": self.occupation,
+            "location": self.location,
+            "needs": self.needs
+        }
+
+    
+class Questions(db.Model):
+    __tablename__ = "questions"
+    id = db.Column('q_id', db.Integer, primary_key=True)
+    text = db.Column('text', db.String(100))
+    qtype = db.Column('q_type', db.String(50))
+    surveys = db.relationship("Survey", secondary=surveyq_table, back_populates="survey")
+
+    def __init__(self, **kwargs):
+        self.text = kwargs.get("text")
+        self.qtype = kwargs.get("qtype")
+    
+    def serialize(self):
+        return {
+            "text": self.text,
+            "q_type": self.qtype
+        }
+
+
+class Survey(db.Model): 
+    __tablename__ = "survey"
+    id = db.Column("s_id", db.Integer, primary_key=True)
+    users = db.relationship("User", secondary=user_survey, back_populates="user")
+    description = db.Column("description", db.String(100))
+    questions = db.relationship("Questions", secondary=surveyq_table, back_populates='questions')
+
+    def __init__(self, **kwargs):
+        self.description = kwargs.get("description")
+
+
+    def serialize(self):
+        return {
+            "description": self.description
+        }
 
 @app.route('/user/<search_name>/')
 def get_user(search_name):
     user = User.query.filter_by(name=search_name).first()
-    return str({'id': user.id, 'user': user.name, 'age': user.age, 'occupation': user.occupation,
-            'location': user.location, 'needs': user.needs})
+    return success_response(user.serialize())
 
-
-# return render_template('show_user.html', user=user)
 
 @app.route('/location/')
 def all_locations():
-    # return render_template('show_all.html', students = students.query.all() )
-    result = User.query.with_entities(User.location).all()
-    result = tuple(chain(*result))
-    # print(result)
-    return str(result)
+    result = [loc.serialize() for loc in User.query.with_entities(User.location).all()]
+    return success_response(result)
 
 
 @app.route('/needs/')
 def all_needs():
-    result = User.query.with_entities(User.needs).all()
-    result = tuple(chain(*result))
-    return str(result)
+    result = [need.serialize() for need in User.query.with_entities(User.needs).all()]
+    return success_response(result)
 
-    # user_needs = session.query(User.needs)
-    # all_needs = user_needs.all()
+
+@app.route('/questions/')
+def all_questions():
+   result = [q.serialize() for q in Questions.query.all()]
+   return success_response(result)
+
+
+@app.route('/questions/', methods=["POST"])
+def add_question():
+   body = json.loads(request.data)
+   new_q = Questions(text=body.get("text"), qtype=body.get("q_type"))
+   db.session.add(new_q)
+   db.session.commit()
+   return success_response(new_q.serialize(), 201)
 
 
 if __name__ == '__main__':
@@ -60,6 +129,3 @@ if __name__ == '__main__':
     # db.session.commit()
 
     app.run(host='0.0.0.0', port=105, debug=True)
-
-# Queries: GET a certain row by name, GET all locations, GET all needs
-# Create a dummy database with Flask-SQLAlchemy with a few columns, working queries, and an API document.
