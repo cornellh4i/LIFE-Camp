@@ -1,5 +1,7 @@
 import './App.css';
 import {useState} from 'react'; 
+import TextQ from './components/TextQ';
+import MultipleChoice from './components/MultipleChoice';
 
 function App() {
   
@@ -29,6 +31,8 @@ function App() {
     setShowOutput(false);
     setFruit(event.target.value); 
   }
+
+  const MultipleChoiceList = ["Male","Female","Other"]
   
   return (
     <div className="App">
@@ -37,19 +41,11 @@ function App() {
         <input type = "text" name ="name" onChange={handleNameChange}></input>
         
         <div>
-          <label>Email </label>
-          <input type = "text" name ="email" onChange= {handleEmailChange} ></input>
+        <TextQ name="email" label="What is your email?" handleChange={() => setEmail(true)} />
         </div>
 
         <div>
-          <label>Favorite Fruit </label>
-          <select value = {fruit} onChange={handleFruitChange}>
-            <option value=""></option>
-            <option value="Mango">Mango</option>
-            <option value="Strawberry">Strawberry</option>
-            <option value="Watermelon">Watermelon</option>
-            <option value="Peach">Peach</option>
-          </select>
+        <MultipleChoice values={MultipleChoiceList}/>
         </div>
       <button onClick = {handleSubmit}>Submit</button>
       </form>
