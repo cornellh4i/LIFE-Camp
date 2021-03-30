@@ -1,2 +1,2 @@
 # life-camp
-SP21 – LIFE Camp user database
+SP21 – LIFE Camp Feedback App
