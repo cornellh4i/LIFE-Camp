@@ -17,15 +17,15 @@ def failure_response(message, code=404):
     return json.dumps({"success": False, "error": message}), code
 
 
-surveyq_table = db.Table("survey_question", db.Model.metadata,
-    db.Column("survey_id", db.Integer, db.ForeignKey("survey.s_id")),
-    db.Column("q_id", db.Integer, db.ForeignKey("questions.q_id"))
-    )
+# surveyq_table = db.Table("survey_question", db.Model.metadata,
+#     db.Column("survey_id", db.Integer, db.ForeignKey("survey.s_id")),
+#     db.Column("q_id", db.Integer, db.ForeignKey("questions.q_id"))
+#     )
 
-user_survey = db.Table("user_survey", db.Model.metadata,
-    db.Column("user_id", db.Integer, db.ForeignKey("user.user_id")),
-    db.Column("survey_id", db.Integer, db.ForeignKey("survey.s_id"))
-)
+# user_survey = db.Table("user_survey", db.Model.metadata,
+#     db.Column("user_id", db.Integer, db.ForeignKey("user.user_id")),
+#     db.Column("survey_id", db.Integer, db.ForeignKey("survey.s_id"))
+# )
 
 
 class User(db.Model):
@@ -36,7 +36,7 @@ class User(db.Model):
     occupation = db.Column('occupation', db.String(50))
     location = db.Column('location', db.String(100))
     needs = db.Column('needs', db.String(500))
-    surveys = db.relationship("Survey", secondary=user_survey, back_populates="survey")
+    #surveys = db.relationship("Survey", secondary=user_survey, back_populates="survey")
 
     def __init__(self, **kwargs):
         self.name = kwargs.get("name")
@@ -60,33 +60,43 @@ class Questions(db.Model):
     id = db.Column('q_id', db.Integer, primary_key=True)
     text = db.Column('text', db.String(100))
     qtype = db.Column('q_type', db.String(50))
-    surveys = db.relationship("Survey", secondary=surveyq_table, back_populates="survey")
+    stype = db.Column('survey_type', db.String(50))
+
+    surveys = db.relationship("Survey")
 
     def __init__(self, **kwargs):
         self.text = kwargs.get("text")
         self.qtype = kwargs.get("qtype")
+        self.stype = kwargs.get("stype")
     
     def serialize(self):
         return {
             "text": self.text,
-            "q_type": self.qtype
+            "q_type": self.qtype,
+            "survey_type": self.stype
         }
 
 
 class Survey(db.Model): 
     __tablename__ = "survey"
     id = db.Column("s_id", db.Integer, primary_key=True)
-    users = db.relationship("User", secondary=user_survey, back_populates="user")
+    #users = db.relationship("User", secondary=user_survey, back_populates="user")
+    response_id = db.Column("response_id", db.String(50))
     description = db.Column("description", db.String(100))
-    questions = db.relationship("Questions", secondary=surveyq_table, back_populates='questions')
+    answer_text = db.Column("answer_text", db.String(100))
+    question_id = db.Column(db.Integer, foreign_key="questions.id")
+    #questions = db.relationship("Questions", secondary=surveyq_table, back_populates='questions')
 
     def __init__(self, **kwargs):
+        self.response_id = kwargs.get("response_id")
         self.description = kwargs.get("description")
+        self.answer_text = kwargs.get("answer_text")
 
 
     def serialize(self):
         return {
-            "description": self.description
+            "description": self.description,
+            "response_id": self.response_id
         }
 
 @app.route('/user/<search_name>/')
@@ -116,7 +126,7 @@ def all_questions():
 @app.route('/questions/', methods=["POST"])
 def add_question():
    body = json.loads(request.data)
-   new_q = Questions(text=body.get("text"), qtype=body.get("q_type"))
+   new_q = Questions(text=body.get("text"), qtype=body.get("q_type"), stype=body.get("survey_type"))
    db.session.add(new_q)
    db.session.commit()
    return success_response(new_q.serialize(), 201)
