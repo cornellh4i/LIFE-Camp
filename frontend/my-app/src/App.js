@@ -4,6 +4,7 @@ import TextQ from './components/TextQ';
 import Header from './components/Header';
 import MultipleChoice from './components/MultipleChoice';
 import Select from './components/Select';
+import LargeTextQ from './components/LargeTextQ';
 import lifeCampLogo from '../src/lifeCampLogo.png'
 function App() {
 
@@ -12,7 +13,10 @@ function App() {
   const [gender, setGender] = useState("");
   const [phone, setPhone]  = useState("");
   const [zipcode, setZipcode]  = useState("");
-  const [age, setAge]  = useState("");
+  const [age, setAge]  = useState(0);
+  const [numChildren, setNumChildren] = useState(0);
+  const [requestType, setRequestType] = useState(""); 
+  const [request, setRequest] = useState("");
   const [showOutput, setShowOutput] = useState(false);
 
   function handleSubmit(event) {
@@ -43,7 +47,7 @@ function App() {
 
   function handleNumChildrenChange(event){
     setShowOutput(false);
-    setZipcode(event.target.value);
+    setNumChildren(event.target.value);
   }
 
   function handleAgeChange(event){
@@ -51,10 +55,16 @@ function App() {
     setAge(event.target.value);
   }
 
-
-  function handleGenderChange(event) {
-    setGender(event)
+  function handleRequestTypeChange(event){
+    setShowOutput(false);
+    setRequestType(event.target.value);
   }
+
+  function handleRequestChange(event){
+    setShowOutput(false);
+    setRequest(event.target.value);
+  }
+
 
   const MultipleChoiceList = ["Male", "Female", "Other"]
   return (
@@ -77,17 +87,22 @@ function App() {
         <Header title="Family Information" />
         <div><TextQ name="children" label="How many children are in your household?" handleChange={handleNumChildrenChange} /></div>
         <Header title="Requests" />
-        <div><TextQ name="request" label="Type of Request" handleChange={handleNumChildrenChange} /></div>
+        <div><TextQ name="requestType" label="Type of Request" handleChange={handleRequestTypeChange} /></div>
+        <div><LargeTextQ name="request" label="Request" handleChange={handleRequestChange} placeholder="Describe the situation + what you need?"/> </div>
         </form>
         <button onClick={handleSubmit}>Submit</button>
       
-​
       {showOutput ?
         <div>
           <p>Name: {name} </p>
           <p>Phone: {phone} </p>
           <p>Email: {email} </p>
-          <p>Gender: {gender} </p>
+          <p>Zipcode: {zipcode} </p>
+          <p>Age: {age} </p>
+          <p>Number of Children: {numChildren} </p>
+          <p>Request Type: {requestType} </p>
+          <p>Request: {request} </p>
+
         </div>
         :
         <></>
