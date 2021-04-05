@@ -15,6 +15,21 @@
   font-size: 25;
 }
 
+.inputLabel {
+  color: "black";
+  display:flex;
+  justify-content:left;
+  font-size: 20;
+  padding-left:15%;
+  font-weight:500;
+}
+
+.yesNo{
+  display:inline-flex;
+  justify-content:left;
+  padding-right:62%;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

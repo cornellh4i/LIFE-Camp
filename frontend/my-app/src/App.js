@@ -5,7 +5,9 @@ import Header from './components/Header';
 import MultipleChoice from './components/MultipleChoice';
 import Select from './components/Select';
 import LargeTextQ from './components/LargeTextQ';
-import lifeCampLogo from '../src/lifeCampLogo.png'
+import lifeCampLogo from '../src/lifeCampLogo.png';
+import RadioButton from './components/RadioButton';
+
 function App() {
 
   const [name, setName] = useState("");
@@ -18,6 +20,7 @@ function App() {
   const [requestType, setRequestType] = useState(""); 
   const [request, setRequest] = useState("");
   const [showOutput, setShowOutput] = useState(false);
+  const [emergency, setEmergency] = useState("");
 
   function handleSubmit(event) {
     console.log(name, email, gender)
@@ -89,6 +92,12 @@ function App() {
         <Header title="Requests" />
         <div><TextQ name="requestType" label="Type of Request" handleChange={handleRequestTypeChange} /></div>
         <div><LargeTextQ name="request" label="Request" handleChange={handleRequestChange} placeholder="Describe the situation + what you need?"/> </div>
+       <p className="inputLabel">Is this an Emergency?</p>
+        <div className="yesNo">
+          <RadioButton value="Yes" label="Yes" selectedOption={emergency} onValueChange={()=>setEmergency("Yes")}/>
+          <p></p>
+          <RadioButton value="No" label="No" selectedOption={emergency} onValueChange={()=>setEmergency("No")}/>
+        </div>
         </form>
         <button onClick={handleSubmit}>Submit</button>
       

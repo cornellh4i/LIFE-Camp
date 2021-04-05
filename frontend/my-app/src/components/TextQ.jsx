@@ -30,7 +30,6 @@ const TextQ = props => {
       fontSize: 18,
       paddingLeft:"15%",
       fontWeight:"500",
-
     }
 
   });
