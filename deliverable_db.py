@@ -9,9 +9,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 
 db = SQLAlchemy(app)
 
+
 # generalized response formats
 def success_response(data, code=200):
     return json.dumps({"success": True, "data": data}), code
+
 
 def failure_response(message, code=404):
     return json.dumps({"success": False, "error": message}), code
@@ -36,7 +38,8 @@ class User(db.Model):
     occupation = db.Column('occupation', db.String(50))
     location = db.Column('location', db.String(100))
     needs = db.Column('needs', db.String(500))
-    #surveys = db.relationship("Survey", secondary=user_survey, back_populates="survey")
+
+    # surveys = db.relationship("Survey", secondary=user_survey, back_populates="survey")
 
     def __init__(self, **kwargs):
         self.name = kwargs.get("name")
@@ -54,7 +57,7 @@ class User(db.Model):
             "needs": self.needs
         }
 
-    
+
 class Questions(db.Model):
     __tablename__ = "questions"
     id = db.Column('q_id', db.Integer, primary_key=True)
@@ -68,7 +71,7 @@ class Questions(db.Model):
         self.text = kwargs.get("text")
         self.qtype = kwargs.get("qtype")
         self.stype = kwargs.get("stype")
-    
+
     def serialize(self):
         return {
             "text": self.text,
@@ -77,27 +80,34 @@ class Questions(db.Model):
         }
 
 
-class Survey(db.Model): 
+class Survey(db.Model):
     __tablename__ = "survey"
     id = db.Column("s_id", db.Integer, primary_key=True)
-    #users = db.relationship("User", secondary=user_survey, back_populates="user")
+    # users = db.relationship("User", secondary=user_survey, back_populates="user")
     response_id = db.Column("response_id", db.String(50))
     description = db.Column("description", db.String(100))
     answer_text = db.Column("answer_text", db.String(100))
     question_id = db.Column(db.Integer, foreign_key="questions.id")
-    #questions = db.relationship("Questions", secondary=surveyq_table, back_populates='questions')
+
+    # questions = db.relationship("Questions", secondary=surveyq_table, back_populates='questions')
 
     def __init__(self, **kwargs):
         self.response_id = kwargs.get("response_id")
         self.description = kwargs.get("description")
         self.answer_text = kwargs.get("answer_text")
 
-
     def serialize(self):
         return {
             "description": self.description,
             "response_id": self.response_id
         }
+
+    def json_form(self):
+        form = {
+            "response_id": self.response_id,
+            self.question_id: self.answer_text
+        }
+        return json.dumps(form)
 
 @app.route('/user/<search_name>/')
 def get_user(search_name):
@@ -119,17 +129,17 @@ def all_needs():
 
 @app.route('/questions/')
 def all_questions():
-   result = [q.serialize() for q in Questions.query.all()]
-   return success_response(result)
+    result = [q.serialize() for q in Questions.query.all()]
+    return success_response(result)
 
 
 @app.route('/questions/', methods=["POST"])
 def add_question():
-   body = json.loads(request.data)
-   new_q = Questions(text=body.get("text"), qtype=body.get("q_type"), stype=body.get("survey_type"))
-   db.session.add(new_q)
-   db.session.commit()
-   return success_response(new_q.serialize(), 201)
+    body = json.loads(request.data)
+    new_q = Questions(text=body.get("text"), qtype=body.get("q_type"), stype=body.get("survey_type"))
+    db.session.add(new_q)
+    db.session.commit()
+    return success_response(new_q.serialize(), 201)
 
 
 if __name__ == '__main__':
