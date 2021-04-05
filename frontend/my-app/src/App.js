@@ -4,7 +4,7 @@ import TextQ from './components/TextQ';
 import Header from './components/Header';
 import MultipleChoice from './components/MultipleChoice';
 import Select from './components/Select';
-
+import lifeCampLogo from '../src/lifeCampLogo.png'
 function App() {
 
   const [name, setName] = useState("");
@@ -59,7 +59,9 @@ function App() {
   const MultipleChoiceList = ["Male", "Female", "Other"]
   return (
     <div className="App">
-      <div >
+      <img className="lifeCampLogo" src={lifeCampLogo}/>
+      <p className="text">Fill out this form to make a request to LIFE Camp!</p>
+      <div>
         <Header title="Personal Information" />
       </div>
       <form>
