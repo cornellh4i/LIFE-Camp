@@ -1,10 +1,6 @@
 import RadioButton from './RadioButton';
 import { useState } from 'react';
 
-
-//pass in list of options 
-
-
 const MultipleChoice = props => {
     const [selected, setSelected] = useState();
 

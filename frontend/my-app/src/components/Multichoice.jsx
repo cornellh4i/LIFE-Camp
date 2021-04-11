@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import MultipleChoice from './MultipleChoice';
 
 const Multichoice = props => {
@@ -33,4 +32,5 @@ const styles = ({
 });
 
 export default Multichoice;
+
 
