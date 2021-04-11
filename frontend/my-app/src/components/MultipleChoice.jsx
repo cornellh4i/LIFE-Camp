@@ -1,21 +1,33 @@
 import RadioButton from './RadioButton';
-import {useState} from 'react'; 
+import { useState } from 'react';
 
 
 //pass in list of options 
 
 
 const MultipleChoice = props => {
-    const [selected, setSelected] = useState(props.values[0]); 
+    const [selected, setSelected] = useState();
+
+    function valueHandler(selectedVal) {
+        setSelected(selectedVal.target.value);
+        props.onChange(selectedVal);
+    };
 
     return (
-        props.values.map((label => 
-            <div>
-                <RadioButton value={label} label={label} selectedOption={selected} onValueChange={()=>setSelected(label)}/>
+        props.values.map((label =>
+            <div style={styles.row}>
+                <RadioButton value={label} label={label} selectedOption={selected} onValueChange={valueHandler} />
             </div>
         ))
-     
+
     )
-  }
-  
-  export default MultipleChoice;
+}
+
+const styles = ({
+    row: {
+        display: "inline-flex",
+        paddingRight: 25,
+    }
+});
+
+export default MultipleChoice;

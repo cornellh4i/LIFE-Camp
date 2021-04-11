@@ -1,15 +1,27 @@
 const RadioButton = props => {
-    return (
-      <div>
-        <label>{props.label}</label>
-        <input
-              type="radio"
-              value={props.value}
-              checked={props.selectedOption === props.value}
-              onChange={props.onValueChange}
-            />
-      </div>
-    )
+  return (
+    <div style={styles.radio}>
+      <input
+        type="radio"
+        value={props.value}
+        checked={props.selectedOption === props.value}
+        onChange={props.onValueChange}
+      />
+      <label style={styles.inputLabel}>{props.label}</label>
+
+    </div>
+  )
+}
+const styles = ({
+  radio: {
+    height: "35px",
+    display: "flex",
+    alignItems: "right",
+    justifyContent: "flex-start",
+    marginLeft: "15%",
+    paddingLeft: "10px"
   }
-  
-  export default RadioButton;
+
+});
+
+export default RadioButton;
