@@ -8,6 +8,7 @@ import LargeTextQ from './components/LargeTextQ';
 import lifeCampLogo from '../src/lifeCampLogo.png';
 import RadioButton from './components/RadioButton';
 import Multichoice from './components/Multichoice';
+import Graph from './components/Graph';
 
 function App() {
 
@@ -134,6 +135,7 @@ function App() {
         :
         <></>
       }
+      <Graph />
     </div>
   );
 }
