@@ -9,6 +9,8 @@ import lifeCampLogo from '../src/lifeCampLogo.png';
 import RadioButton from './components/RadioButton';
 import Multichoice from './components/Multichoice';
 import Graph from './components/Graph';
+import Filter from './components/Filter';
+import ActiveFilters from './components/ActiveFilters';
 
 function App() {
 
@@ -23,6 +25,14 @@ function App() {
   const [request, setRequest] = useState("");
   const [showOutput, setShowOutput] = useState(false);
   const [emergency, setEmergency] = useState("");
+
+  const [showSurvey, setShowSurvey]= useState(true);
+  const [selectedFilters, setSelectedFilters] = useState([]); 
+
+  function handleScreenChange(event){
+    setShowSurvey(!showSurvey);
+    event.preventDefault();
+  }
 
   function handleSubmit(event) {
     console.log(name, email, gender)
@@ -85,7 +95,9 @@ function App() {
 
 
   return (
+    showSurvey ? 
     <div className="App">
+      <button style={styles.submit} onClick={handleScreenChange}> Go to Graph </button>
       <img className="lifeCampLogo" src={lifeCampLogo} />
       <p className="text">Fill out this form to make a request to LIFE Camp!</p>
       <div>
@@ -124,7 +136,6 @@ function App() {
           <p>Zipcode: {zipcode} </p>
           <p>Age: {age} </p>
           <p>Gender: {gender} </p>
-
           <p>Number of Children: {numChildren} </p>
           <p>Request Type: {requestType} </p>
           <p>Request: {request} </p>
@@ -135,7 +146,15 @@ function App() {
         :
         <></>
       }
+      
+    </div>
+    :
+    <div>
+      <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
       <Graph />
+      <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Filter Type of Request" handleChange={handleRequestTypeChange} values={["Age Range", "Zipcode", "Time Period"]} />
+      {/* {selectedFilters.map((val, i) => <p>{val}</p> )} */}
+      <ActiveFilters selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
     </div>
   );
 }
