@@ -1,12 +1,30 @@
 import x from './x.png'
 
 const ActiveFilter = props => {
+
+    // function handleDelete(event){
+    //   // event.preventDefault();
+    //   const newList = props.selectedFilters.filter((item) => item != event.target.value);
+    //   props.setSelectedFilters(newList); 
+    //   console.log('value:', event.target.value)
+    // }
+
+    function handleDelete(val){
+      // event.preventDefault();
+      const newList = props.selectedFilters.filter((item) => item != val);
+      props.setSelectedFilters(newList); 
+      console.log('value:', val)
+    }
+
+    console.log(props.selectedFilters);
     return (
       <div>
         {props.selectedFilters.map((val,i) =>  
+        
         <div style={styles.filter}>
-            {val}
-            <button style={styles.exit}> <img src={x}/> </button>
+          <img src={x} style={styles.exit} onClick={()=>handleDelete(val)}/>
+          <p style={styles.text}>{val}</p>
+            {/* <button style={styles.exit} onClick={handleDelete} value={val}> {val} </button> */}
         </div>
         )}
       </div>
@@ -15,26 +33,33 @@ const ActiveFilter = props => {
 
   const styles = ({
     filter: {
-      width: "30%",
-      height: "60px",
-      display: "inline",
-      backgroundColor: "#F08633",
+      width: "10%",
+      height: "10%",
+      display: "inline-block",
+      backgroundColor: "#FFB383",
       alignItems: "right",
       justifyContent: "flex-start",
       margin: "auto",
       marginTop: 5,
       marginBottom: 15,
+      marginLeft: 5,
       lineHeight: "20px",
       borderRadius:"11px",
       border:"none",
       paddingLeft: "10px"
     },
     exit: {
-      justifyContent:"left",
+      display: "inline-flex",
+      justifyContent:"right",
       border:"none", 
-      backgroundColor:"#F08633",
-      borderRadius:"11px",
-
+      backgroundColor:"#FFB383",
+      marginRight:"5%",
+      // borderRadius:"11px",
+    },
+    text: {
+      font:"SF Pro Display",
+      display:"inline",
+      marginRight:"10%"
     }
 
   });
