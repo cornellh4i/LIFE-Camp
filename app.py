@@ -52,6 +52,11 @@ def add_response():
     db.session.commit()
     return success_response(new_r.serialize(), 201)
 
+@app.route('/addressed/<survey_id>/')
+def markAddressed(survey_id):
+    survey = Survey.query.get(survey_id)
+    survey.addressed = True
+    return success_response(survey.serialize())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=105, debug=True)
