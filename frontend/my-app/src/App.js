@@ -81,8 +81,6 @@ function App() {
 
   const MultipleChoiceList = ["Male", "Female", "Other"];
   const ageList = Array.from({ length: 90 }, (_, index) => index + 10)
-  // const ageList = Array(90).fill(10).map(Number.call, Number);
-
 
   return (
     <div className="App">
@@ -102,14 +100,7 @@ function App() {
         <div><TextQ name="children" label="How many children are in your household?" handleChange={handleNumChildrenChange} /></div>
         <Header title="Requests" />
         <div><Select label="Type of Request" handleChange={handleRequestTypeChange} values={["Aid", "Talk"]} /></div>
-        {/* <div><TextQ name="requestType" label="Type of Request" handleChange={handleRequestTypeChange} /></div> */}
         <div><LargeTextQ name="request" label="Request" handleChange={handleRequestChange} placeholder="Describe the situation + what you need?" /> </div>
-        {/* <p className="inputLabel">Is this an Emergency?</p>
-        <div className="yesNo">
-          <RadioButton value="Yes" label="Yes" selectedOption={emergency} onValueChange={() => setEmergency("Yes")} />
-          <p></p>
-          <RadioButton value="No" label="No" selectedOption={emergency} onValueChange={() => setEmergency("No")} />
-        </div> */}
         <div><Multichoice name="emergency" label="Is this an Emergency?" values={["Yes", "No"]} handleChange={handleEmergency} /> </div>
 
 
@@ -124,18 +115,15 @@ function App() {
           <p>Zipcode: {zipcode} </p>
           <p>Age: {age} </p>
           <p>Gender: {gender} </p>
-
           <p>Number of Children: {numChildren} </p>
           <p>Request Type: {requestType} </p>
           <p>Request: {request} </p>
           <p>Emergency: {emergency} </p>
-
-
         </div>
         :
         <></>
       }
-      <Graph />
+      <Graph style={styles.graph} />
     </div>
   );
 }
@@ -157,7 +145,6 @@ const styles = {
     paddingLeft: "10px",
     marginTop: 50,
     marginBottom: 30
-  }
-
+  },
 }
 export default App;
