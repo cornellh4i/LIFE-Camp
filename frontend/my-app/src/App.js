@@ -141,7 +141,8 @@ function App() {
     <div>
       <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
       <Graph />
-      <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Filter Type of Request" handleChange={handleRequestTypeChange} values={["Age Range", "Zipcode", "Time Period"]} />
+      <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Filter Type of Request" handleChange={handleRequestTypeChange} values={["Filter Type of Request", "Age Range", "Zipcode", "Time Period"]} />
+      <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={["Choose Specific"]} />
       {/* {selectedFilters.map((val, i) => <p>{val}</p> )} */}
       <ActiveFilters selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
     </div>

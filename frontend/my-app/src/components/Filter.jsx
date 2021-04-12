@@ -1,7 +1,7 @@
  
 import {useState} from 'react';
 const Filter = props => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(props.label);
     
     function valueHandler(selectedVal) {
       setValue(selectedVal.target.value);
@@ -13,6 +13,8 @@ const Filter = props => {
 
     function updateFilters(){
         props.addFilter([... props.selectedFilters, value]);
+        // const newList = props.selectedFilters.filter((item) => item != props.label);
+        // props.addFilter(newList)
     }
 
     return (
