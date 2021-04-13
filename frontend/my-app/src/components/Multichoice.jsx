@@ -18,14 +18,14 @@ const styles = ({
     display: "flex",
     justifyContent: "left",
     fontSize: 18,
-    paddingLeft: "15%",
+    paddingLeft: "5%",
     fontWeight: "500",
     marginBottom: 10,
   },
   radios: {
     justifyContent: "flex-start",
     height: "35px",
-    paddingLeft: "15%",
+    paddingLeft: "5%",
     textAlign: "left",
   }
 

@@ -7,11 +7,11 @@ const Header = props => {
   };
   const styles = ({
     header: {
-      width: "70%",
+      width: "90%",
       height: "30 px",
       paddingLeft: 6,
       display: "flex",
-      backgroundColor: '#FFAD93',
+      backgroundColor: '#F7C399',
       alignItems: "center",
       justifyContent: "flex-start",
       margin: "auto",

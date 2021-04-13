@@ -24,16 +24,16 @@ const styles = ({
     width: "20%",
     height: "35px",
     display: "inline",
-    backgroundColor: "rgba(255, 208, 193, 0.5)",
     alignItems: "right",
     justifyContent: "flex-start",
     margin: "auto",
     marginTop: 5,
     marginBottom: 15,
-    marginRight: "51%",
+    marginRight: "71%",
     lineHeight: "20px",
     borderRadius: "20px",
-    border: "none",
+    borderColor: "#7D7674",
+    borderWidth: 1,    
     paddingLeft: "10px"
   },
   inputLabel: {
@@ -41,7 +41,7 @@ const styles = ({
     display: "flex",
     justifyContent: "left",
     fontSize: 18,
-    paddingLeft: "15%",
+    paddingLeft: "5%",
     fontWeight: "500",
   }
 

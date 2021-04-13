@@ -18,7 +18,7 @@ const styles = ({
     display: "flex",
     alignItems: "right",
     justifyContent: "flex-start",
-    marginLeft: "15%",
+    marginLeft: "5%",
     paddingLeft: "10px"
   }
 
