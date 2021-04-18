@@ -1,4 +1,4 @@
-import x from './x.png'
+import x from './images/x.png'
 
 const ActiveFilter = props => {
 
@@ -11,7 +11,7 @@ const ActiveFilter = props => {
 
     function handleDelete(val){
       // event.preventDefault();
-      const newList = props.selectedFilters.filter((item) => item != val);
+      const newList = props.selectedFilters.filter((item) => item != val && item!="");
       props.setSelectedFilters(newList); 
       console.log('value:', val)
     }
@@ -19,7 +19,7 @@ const ActiveFilter = props => {
     console.log(props.selectedFilters);
     return (
       <div>
-        {props.selectedFilters.map((val,i) =>  
+        {props.selectedFilters[1].map((val) =>  
         
         <div style={styles.filter}>
           <img src={x} style={styles.exit} onClick={()=>handleDelete(val)}/>

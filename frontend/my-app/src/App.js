@@ -6,9 +6,9 @@ import MultipleChoice from './components/MultipleChoice';
 import Select from './components/Select';
 import LargeTextQ from './components/LargeTextQ';
 import lifeCampLogo from '../src/lifeCampLogo.png';
-import RadioButton from './components/RadioButton';
 import Multichoice from './components/Multichoice';
 import Graph from './components/Graph';
+import RequestCard from './components/RequestCard';
 import Filter from './components/Filter';
 import ActiveFilters from './components/ActiveFilters';
 
@@ -25,9 +25,10 @@ function App() {
   const [request, setRequest] = useState("");
   const [showOutput, setShowOutput] = useState(false);
   const [emergency, setEmergency] = useState("");
-
   const [showSurvey, setShowSurvey] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filterRequestType, setFilterRequestType] = useState(""); 
+  const [specificFilter, setSpecificFilter] = useState(""); 
 
   function handleScreenChange(event) {
     setShowSurvey(!showSurvey);
@@ -35,58 +36,14 @@ function App() {
   }
 
   function handleSubmit(event) {
-    console.log(name, email, gender)
+    // console.log(name, email, gender)
     setShowOutput(true);
     event.preventDefault();
   }
 
-  function handleNameChange(event) {
+  function handleChange(event, setFunction) {
     setShowOutput(false);
-    setName(event.target.value);
-  }
-
-  function handleEmailChange(event) {
-    setShowOutput(false);
-    setEmail(event.target.value);
-  }
-
-  function handlePhoneChange(event) {
-    setShowOutput(false);
-    setPhone(event.target.value);
-  }
-
-  function handleZipcodeChange(event) {
-    setShowOutput(false);
-    setZipcode(event.target.value);
-  }
-
-  function handleNumChildrenChange(event) {
-    setShowOutput(false);
-    setNumChildren(event.target.value);
-  }
-
-  function handleAgeChange(event) {
-    setShowOutput(false);
-    setAge(event.target.value);
-  }
-
-  function handleGender(event) {
-    setShowOutput(false);
-    setGender(event.target.value);
-  }
-
-  function handleRequestTypeChange(event) {
-    setShowOutput(false);
-    setRequestType(event.target.value);
-  }
-
-  function handleRequestChange(event) {
-    setShowOutput(false);
-    setRequest(event.target.value);
-  }
-  function handleEmergency(event) {
-    setShowOutput(false);
-    setEmergency(event.target.value);
+    setFunction(event.target.value);
   }
 
   const MultipleChoiceList = ["Male", "Female", "Other"];
@@ -104,18 +61,18 @@ function App() {
           <Header title="PERSONAL INFORMATION" />
         </div>
         <form>
-          <div><TextQ name="name" label="Name:" handleChange={handleNameChange} /></div>
-          <div><TextQ name="phone" label="Phone Number" handleChange={handlePhoneChange} /></div>
-          <div><TextQ name="email" label="Email address" handleChange={handleEmailChange} /></div>
-          <div><TextQ name="zipcode" label="Zipcode" handleChange={handleZipcodeChange} /></div>
-          <div><Select label="Age Range" handleChange={handleAgeChange} values={ageList} /></div>
-          <div><Multichoice name="gender" label="Gender" values={MultipleChoiceList} handleChange={handleGender} /> </div>
+          <div><TextQ name="name" label="Name:" handleChange={e => handleChange (e, setName)} /></div>
+          <div><TextQ name="phone" label="Phone Number" handleChange={e => handleChange (e, setPhone)} /></div>
+          <div><TextQ name="email" label="Email address" handleChange={e => handleChange (e, setEmail)} /></div>
+          <div><TextQ name="zipcode" label="Zipcode" handleChange={e => handleChange (e, setZipcode)} /></div>
+          <div><Select label="Age Range" handleChange={e => handleChange (e, setAge)} values = {ageList} /></div>
+          <div><Multichoice name="gender" label="Gender" values={MultipleChoiceList} handleChange={e => handleChange (e, setGender)}/> </div>
           <Header title="FAMILY INFORMATION" />
-          <div><Select label="How many children are in your household?" handleChange={handleNumChildrenChange} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
+          <div><Select label="How many children are in your household?" handleChange={e => handleChange (e, setNumChildren)} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
           <Header title="REQUESTS" />
-          <div><Select label="Type of Request" handleChange={handleRequestTypeChange} values={requestsList} /></div>
-          <div><LargeTextQ name="request" label="Request" handleChange={handleRequestChange} placeholder="Describe the situation + what you need?" /> </div>
-          <div><Multichoice name="emergency" label="Is this an Emergency?" values={["Yes", "No"]} handleChange={handleEmergency} /> </div>
+          <div><Select label="Type of Request" handleChange={e => handleChange (e, setRequestType)} values = {requestsList}/></div>
+          <div><LargeTextQ name="request" label="Request" handleChange={e => handleChange (e, setRequest)} placeholder="Describe the situation + what you need?" /> </div>
+          <div><Multichoice name="emergency" label="Is this an Emergency?" values={["Yes", "No"]} handleChange={e => handleChange (e, setEmergency)} /></div>
 
 
         </form>
@@ -140,14 +97,35 @@ function App() {
 
       </div>
       :
+
       <div>
         <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
         <Graph />
-        <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Filter Type of Request" handleChange={handleRequestTypeChange} values={["Filter Type of Request", "Age Range", "Zipcode", "Time Period"]} />
-        <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={["Choose Specific"]} />
+        <Select label="Filter Type of Request" handleChange={e => handleChange (e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]}/>
+        {
+          filterRequestType === "Age Range" ? 
+            <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["0-18", "18-60", "60+"]}/>
+            :
+              filterRequestType === "Zipcode" ? 
+                <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["12345", "235345", "32431"]}/>
+              :
+                <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["Time Period 1", "Time Period 2", "Time Period 3"]}/>
+        }
+        <RequestCard 
+          name="John Penridge" 
+          phone="215-512-1402" 
+          email="example@gmail.com" 
+          requestTag = "Food" 
+          emergency={true}
+          requestText = "I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+          handleChange = {console.log("complete")}
+          />
+
+        {/* <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={[]} /> */}
         {/* {selectedFilters.map((val, i) => <p>{val}</p> )} */}
-        <ActiveFilters selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
+        {/* <ActiveFilters selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} /> */}
       </div>
+
   );
 }
 

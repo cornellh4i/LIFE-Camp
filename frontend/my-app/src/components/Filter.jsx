@@ -1,12 +1,13 @@
  
 import {useState} from 'react';
 const Filter = props => {
-    const [value, setValue] = useState(props.label);
+    const [value, setValue] = useState("");
     
     function valueHandler(selectedVal) {
       setValue(selectedVal.target.value);
       props.handleChange(selectedVal);
-      updateFilters();
+      props.addFilter([... props.selectedFilters, value]);
+      // updateFilters();
       console.log(value);
       console.log(props.selectedFilter);
     };
@@ -20,7 +21,7 @@ const Filter = props => {
     return (
       <div >
         <select style={styles.select} value={value} onChange={valueHandler} >
-          <option key={0} value={""}></option>
+          {/* <option key={0} value={""}></option> */}
           {props.values.map((val, i) => <option key={val} value={val}>{val}</option>)}
         </select>
       </div >

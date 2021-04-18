@@ -28,6 +28,7 @@ const styles = ({
     color: "black",
     display: "flex",
     justifyContent: "left",
+    font:"Georgia",
     fontSize: 18,
     paddingLeft: "5%",
     fontWeight: "500",
