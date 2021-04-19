@@ -31,7 +31,7 @@ class Survey(db.Model):
     description = db.Column(db.String, nullable=False)
     answer_text = db.Column(db.String, nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey("question.id"), nullable=False)
-    time_of_submit = db.Column(db.String)
+    time_of_submit = db.Column(db.DateTime)
     addressed = db.Column(db.Boolean, default=False)
     
     def __init__(self, **kwargs):
@@ -39,9 +39,8 @@ class Survey(db.Model):
         self.description = kwargs.get("description")
         self.answer_text = kwargs.get("answer_text")
         self.question_id = kwargs.get("question_id")
-        dateTimeObj = datetime.now()
-        timestampStr = dateTimeObj.strftime("%d-%b-%Y (%H:%M:%S.%f)")
-        self.time_of_submit = timestampStr
+        dateTimeObj = datetime.utcnow()
+        self.time_of_submit = dateTimeObj
 
     def serialize(self):
         return {
@@ -49,6 +48,7 @@ class Survey(db.Model):
             "description": self.description,
             "response_id": self.response_id,
             "answer_text": self.answer_text,
-            "time_of_submit": self.time_of_submit,
+            "question_id": self.question_id,
+            "time_of_submit": self.time_of_submit.strftime("%d-%b-%Y (%H:%M:%S.%f)"),
             "addressed": self.addressed
         }
