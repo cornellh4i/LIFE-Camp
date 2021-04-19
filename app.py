@@ -51,7 +51,7 @@ def all_responses():
 @app.route('/responses/', methods=["POST"])
 def add_response():
     body = json.loads(request.data)
-    new_r = Survey(response_id=body.get("response_id"), description=body.get("description"), answer_text=body.get("answer_text"), stype=body.get("stype"), question_id=body.get("question_id"))
+    new_r = Survey(response_id=body.get("response_id"), description=body.get("description"), answer_text=body.get("answer_text"), question_id=body.get("question_id"))
     db.session.add(new_r)
     db.session.commit()
     return success_response(new_r.serialize(), 201)
