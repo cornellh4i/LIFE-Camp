@@ -11,7 +11,7 @@ const Header = props => {
       height: "30 px",
       paddingLeft: 6,
       display: "flex",
-      backgroundColor: '#F08633',
+      backgroundColor: '#F7C399',
       alignItems: "center",
       justifyContent: "flex-start",
       margin: "auto",
