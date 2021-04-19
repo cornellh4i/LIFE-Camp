@@ -117,7 +117,8 @@ def surveyJSON(response_id):
         questions = []
         answers = []
         for s in surveys:
-            questions.append(s.question_id)
+            q_text = Question.query.get(s.question_id).text
+            questions.append(q_text)
             answers.append(s.answer_text)
             time = s.time_of_submit.strftime("%d-%b-%Y (%H:%M:%S.%f)")
             addressed = s.addressed
@@ -128,7 +129,7 @@ def surveyJSON(response_id):
             "time_stamp": time,
             "addressed" : addressed
         }
-        #print(json)
+        print(json)
     return json
     
 
