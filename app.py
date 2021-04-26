@@ -65,7 +65,7 @@ def get_cts(id):
 
 
 @app.route('/addressed/<int:survey_id>/', methods=["POST"])
-def markAddressed(survey_id):
+def mark_addressed(survey_id):
     survey = Survey.query.get(survey_id)
     survey.addressed = True
     db.session.commit()
@@ -89,6 +89,19 @@ def filter_queries():
     all_ids = age_ids + zip_ids + date_ids
     result = {i for i in all_ids if all_ids.count(i) == 3}
     return success_response(list(result))
+
+@app.route('/convertToCSV/', methods=["GET"])
+def convertToCSV():
+    with sqlite3.connect("users.sqlite3") as connection:
+        csvWriter = csv.writer(open("Survey.csv", "w"))
+        records = Survey.query.all()
+        for r in records:
+            csvWriter.writerow([r.id, r.description, r.response_id
+            , r.answer_text, r.question_id, r.time_of_submit, r.addressed])
+        csvWriter = csv.writer(open("Question.csv", "w"))
+        records = Question.query.all()
+        for r in records:
+            csvWriter.writerow([r.id, r.text, r.qtype, r.stype])
     
 # filter route
 # input
@@ -110,7 +123,7 @@ def filter_queries():
 #     result = [q.serialize() for q in query]
 #     return success_response(result)
 
-def surveyJSON(response_id):
+def get_surveyJSON(response_id):
     json = {}
     with app.app_context():
         surveys = Survey.query.filter_by(response_id=response_id)
@@ -129,26 +142,15 @@ def surveyJSON(response_id):
             "time_stamp": time,
             "addressed" : addressed
         }
-        print(json)
     return json
-    
 
-def convertToCSV():
-    with app.app_context():
-        with sqlite3.connect("users.sqlite3") as connection:
-            csvWriter = csv.writer(open("Survey.csv", "w"))
-            records = Survey.query.all()
-            for r in records:
-                csvWriter.writerow([r.id, r.description, r.response_id
-                , r.answer_text, r.question_id, r.time_of_submit, r.addressed])
-            csvWriter = csv.writer(open("Question.csv", "w"))
-            records = Question.query.all()
-            for r in records:
-                csvWriter.writerow([r.id, r.text, r.qtype, r.stype])
-                
+@app.route('/all_surveyJSON/', methods=["GET"])
+def all_surveyJSON():
+    result = [get_surveyJSON(s.response_id) for s in Survey.query.all()]
+    return success_response(result)
 
 if __name__ == '__main__':
-    convertToCSV()
-    surveyJSON(2)
+    #convertToCSV()
+    #surveyJSON(2)
     app.run(host='0.0.0.0', port=105, debug=True)
     

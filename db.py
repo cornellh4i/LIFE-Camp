@@ -33,7 +33,7 @@ class Survey(db.Model):
     question_id = db.Column(db.Integer, db.ForeignKey("question.id"), nullable=False)
     time_of_submit = db.Column(db.DateTime)
     addressed = db.Column(db.Boolean, default=False)
-    
+
     def __init__(self, **kwargs):
         self.response_id = kwargs.get("response_id")
         self.description = kwargs.get("description")
