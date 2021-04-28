@@ -2,6 +2,7 @@ import './App.css';
 import { useState } from 'react';
 import TextQ from './components/TextQ';
 import Header from './components/Header';
+import GraphHeader from './components/GraphHeader';
 import MultipleChoice from './components/MultipleChoice';
 import Select from './components/Select';
 import LargeTextQ from './components/LargeTextQ';
@@ -29,6 +30,7 @@ function App() {
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filterRequestType, setFilterRequestType] = useState(""); 
   const [specificFilter, setSpecificFilter] = useState(""); 
+  const [trends, setTrends] = useState(true);
 
   function handleScreenChange(event) {
     setShowSurvey(!showSurvey);
@@ -99,7 +101,11 @@ function App() {
       :
 
       <div>
+        <div>
+          <GraphHeader title1="TRENDS" title2="REQUESTS" trends={trends} setTrends={setTrends}/>
+        </div>
         <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
+        
         <Graph />
         <Select label="Filter Type of Request" handleChange={e => handleChange (e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]}/>
         {
