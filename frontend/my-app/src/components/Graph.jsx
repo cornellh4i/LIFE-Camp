@@ -4,6 +4,8 @@ var React = require('react');
 var Component = React.Component;
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+var dataPoints = []
+const requestsList = ["Therapeutic Services", "Health Services", "Legal Aid", "Assistance for Youth", "COVID Support (eg. PPE Supplies)", "Transit", "Food", "Housing Support", "Access to Education", "Domestic Violence Support", "Other"];
 
 CanvasJS.addColorSet("ColorSet",
   [
@@ -33,7 +35,7 @@ class Graph extends Component {
       ],
       colorSet: "ColorSet",
       axisY: {
-        title: "Types of Response",
+        title: "Frequency of Response",
         gridColor: "#B2B2B2",
         gridDashType: "dot",
         margin: 10,
@@ -49,13 +51,14 @@ class Graph extends Component {
       data: [
         {
           type: "column",
-          dataPoints: [
-            { label: "Apple", y: 10 },
-            { label: "Orange", y: 15 },
-            { label: "Banana", y: 25 },
-            { label: "Mango", y: 30 },
-            { label: "Grape", y: 28 }
-          ]
+          dataPoints: dataPoints
+          // [
+          //   { label: "Apple", y: 10 },
+          //   { label: "Orange", y: 15 },
+          //   { label: "Banana", y: 25 },
+          //   { label: "Mango", y: 30 },
+          //   { label: "Grape", y: 28 }
+          // ]
         }
       ]
     }
@@ -67,6 +70,25 @@ class Graph extends Component {
         {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
       </div>
     );
+
+  }
+  componentDidMount() {
+    var chart = this.chart;
+    // fetch('https://lifecamp.com/responses/ct/{question_id}')  question_id is the id of Type of Requests question
+    fetch('../json_example.json')
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        for (var i = 0; i < data.length; i++) {
+          var name = requestsList[i]
+          dataPoints.push({
+            label: name,
+            y: data[i].name
+          });
+        }
+        chart.render();
+      });
   }
 }
 const styles = {
