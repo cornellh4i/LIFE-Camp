@@ -106,31 +106,36 @@ function App() {
         </div>
         <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
         
-        <Graph />
-        <Select label="Filter Type of Request" handleChange={e => handleChange (e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]}/>
-        {
-          filterRequestType === "Age Range" ? 
-            <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["0-18", "18-60", "60+"]}/>
-            :
-              filterRequestType === "Zipcode" ? 
-                <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["12345", "235345", "32431"]}/>
-              :
-                <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["Time Period 1", "Time Period 2", "Time Period 3"]}/>
-        }
-        <RequestCard 
-          name="John Penridge" 
-          phone="215-512-1402" 
-          email="example@gmail.com" 
-          requestTag = "Food" 
-          emergency={true}
-          requestText = "I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
-          handleChange = {console.log("complete")}
-          />
-
+        {trends ? 
+          <div>
+            <Graph />
+            <Select label="Filter Type of Request" handleChange={e => handleChange (e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]}/>
+            {
+              filterRequestType === "Age Range" ? 
+                <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["0-18", "18-60", "60+"]}/>
+                :
+                  filterRequestType === "Zipcode" ? 
+                    <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["12345", "235345", "32431"]}/>
+                  :
+                    <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["Time Period 1", "Time Period 2", "Time Period 3"]}/>
+            }
+          </div>
+        :
+          <RequestCard 
+            name="John Penridge" 
+            phone="215-512-1402" 
+            email="example@gmail.com" 
+            requestTag = "Food" 
+            emergency={true}
+            requestText = "I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+            handleChange = {console.log("complete")}
+            />
+      }
         {/* <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={[]} /> */}
         {/* {selectedFilters.map((val, i) => <p>{val}</p> )} */}
         {/* <ActiveFilters selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} /> */}
       </div>
+
 
   );
 }
