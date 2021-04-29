@@ -39,8 +39,8 @@ function App() {
   const genderList = []
 
   const requestsList = ["Therapeutic Services", "Health Services", "Legal Aid", "Assistance for Youth", "COVID Support (eg. PPE Supplies)", "Transit", "Food", "Housing Support", "Access to Education", "Domestic Violence Support", "Other"];
-  const [filterRequestType, setFilterRequestType] = useState(""); 
-  const [specificFilter, setSpecificFilter] = useState(""); 
+  // const [filterRequestType, setFilterRequestType] = useState(""); 
+  // const [specificFilter, setSpecificFilter] = useState(""); 
   const [trends, setTrends] = useState(true);
 
   function handleScreenChange(event) {
@@ -125,7 +125,7 @@ function App() {
           <GraphHeader title1="TRENDS" title2="REQUESTS" trends={trends} setTrends={setTrends}/>
         </div>
         <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
-        <Graph />
+        {/* <Graph />
         <Select label="Filter Type of Request" handleChange={e => handleChange(e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]} />
         {
           filterRequestType === "Age Range" ?
@@ -135,8 +135,8 @@ function App() {
               <Select label="Choose Specific" handleChange={e => handleChange(e, setSpecificFilter)} values={["12345", "235345", "32431"]} />
               :
               <Select label="Choose Specific" handleChange={e => handleChange(e, setSpecificFilter)} values={["Time Period 1", "Time Period 2", "Time Period 3"]} />
-        }
-        <RequestCard
+        } */}
+        {/* <RequestCard
           name="John Penridge"
           phone="215-512-1402"
           email="example@gmail.com"
@@ -144,7 +144,7 @@ function App() {
           emergency={true}
           requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
           handleChange={console.log("complete")}
-        />
+        /> */}
 
         
         {trends ? 
