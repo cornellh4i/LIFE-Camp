@@ -12,6 +12,7 @@ import Graph from './components/Graph';
 import RequestCard from './components/RequestCard';
 import Filter from './components/Filter';
 import ActiveFilters from './components/ActiveFilters';
+import FilterSideBar from './components/FilterSideBar';
 
 function App() {
 
@@ -34,9 +35,9 @@ function App() {
   const [specificFilter, setSpecificFilter] = useState("");
   const MultipleChoiceList = ["Male", "Female", "Other"];
   const ageList = Array.from({ length: 90 }, (_, index) => index + 10)
-  const zipCodeList = []
-  const neighborhoodList = []
-  const genderList = []
+  const zipCodeList = ["11411", "11412", "11413", "11423", "11429/11428", "11434", "11435/11436"]
+  const neighborhoodList = ["Cambria Heights", "Saint Alban", "Spring Albans","Springfield GardEventSource", "Saint Albans", "Hollis", "Queens Village", "Rochdale Village", "Jamaica"]
+  const genderList = [""]
 
   const requestsList = ["Therapeutic Services", "Health Services", "Legal Aid", "Assistance for Youth", "COVID Support (eg. PPE Supplies)", "Transit", "Food", "Housing Support", "Access to Education", "Domestic Violence Support", "Other"];
   // const [filterRequestType, setFilterRequestType] = useState(""); 
@@ -52,6 +53,11 @@ function App() {
     // console.log(name, email, gender)
     setShowOutput(true);
     event.preventDefault();
+  }
+
+  function handleSave(event) {
+console.log("");
+    
   }
 
   function handleChange(event, setFunction) {
@@ -78,9 +84,10 @@ function App() {
           <div><TextQ name="name" label="Name:" handleChange={e => handleChange(e, setName)} /></div>
           <div><TextQ name="phone" label="Phone Number" handleChange={e => handleChange(e, setPhone)} /></div>
           <div><TextQ name="email" label="Email address" handleChange={e => handleChange(e, setEmail)} /></div>
-          {/* <div><TextQ name="zipcode" label="Zipcode" handleChange={e => handleChange(e, setZipcode)} /></div> */}
-          <div><Select label="Zipcode" handleChange={e => handleChange(e, setZipcode)} values={ageList} /></div>
-          <div><Select label="Neighborhood" handleChange={e => handleChange(e, setZipcode)} values={ageList} /></div>
+          <div><Select label="Zipcode" handleChange={e => handleChange(e, setZipcode)} values={zipCodeList} /></div>
+          {/* <div style = {styles.row}> */}
+          <div><Select label="Neighborhood" handleChange={e => handleChange(e, setZipcode)} values={neighborhoodList} /></div>
+          {/* </div> */}
           <div><Select label="Age Range" handleChange={e => handleChange(e, setAge)} values={ageList} /></div>
           <div><Multichoice name="gender" label="Gender" values={MultipleChoiceList} handleChange={e => handleChange(e, setGender)} /> </div>
           <Header title="FAMILY INFORMATION" />
@@ -93,8 +100,6 @@ function App() {
           <div><Select label="Type of Request" handleChange={e => handleChange(e, setRequestType)} values={requestsList} /></div>
           <div><LargeTextQ name="request" label="Request" handleChange={e => handleChange(e, setRequest)} placeholder="Describe the situation + what you need?" /> </div>
           <div><Multichoice name="emergency" label="Is this an Emergency?" values={["Yes", "No"]} handleChange={e => handleChange(e, setEmergency)} /></div>
-
-
         </form>
         <button style={styles.submit} onClick={handleSubmit}>SUBMIT</button>
 
@@ -148,20 +153,32 @@ function App() {
 
         
         {trends ? 
-          <div>
-            <Graph />
-            <Select label="Filter Type of Request" handleChange={e => handleChange (e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]}/>
-            {
+          <div style = {styles.trends}>
+            <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList}/>
+            
+            {/* <p>{settings}</p> */}
+            <div>
+              <Graph />
+            </div>
+
+            {/* {
               filterRequestType === "Age Range" ? 
-                <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["0-18", "18-60", "60+"]}/>
+                <Select request={true} label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["0-18", "18-60", "60+"]}/>
                 :
                   filterRequestType === "Zipcode" ? 
-                    <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["12345", "235345", "32431"]}/>
+                    <Select request={true} label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["12345", "235345", "32431"]}/>
                   :
-                    <Select label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["Time Period 1", "Time Period 2", "Time Period 3"]}/>
-            }
+                    <Select request={true} label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["Time Period 1", "Time Period 2", "Time Period 3"]}/>
+            } */}
           </div>
         :
+        <div style = {styles.trends}>
+          <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList}/>
+        
+        {/* <p>{settings}</p> */}
+        
+       
+
           <RequestCard 
             name="John Penridge" 
             phone="215-512-1402" 
@@ -171,6 +188,7 @@ function App() {
             requestText = "I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
             handleChange = {console.log("complete")}
             />
+       </div>
       }
         {/* <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={[]} /> */}
         {/* {selectedFilters.map((val, i) => <p>{val}</p> )} */}
@@ -186,6 +204,9 @@ const styles = {
     backgroundColor: "#F08633",
     color: "white",
     paddingBottom: 20
+  },
+  row: {
+    float: "right"
   },
   submit: {
     justifyContent: "flex-end",

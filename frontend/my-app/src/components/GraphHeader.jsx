@@ -27,7 +27,7 @@ const GraphHeader = props => {
   const styles = ({
     header: {
       width: "100%",
-      height: "40 px",
+      height: "70 px",
       paddingLeft: 20,
       paddingTop:10,
       paddingBottom:10,
@@ -43,6 +43,8 @@ const GraphHeader = props => {
       color: "white",
       fontSize: 32,
       paddingLeft: 10,
+      paddingTop: 10,
+      paddingBottom:10,
       fontFamily: "Be Vietnam",
       fontWeight: "bold", 
       marginRight: 20,
