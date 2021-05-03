@@ -34,12 +34,13 @@ function App() {
   const [filterRequestType, setFilterRequestType] = useState("");
   const [specificFilter, setSpecificFilter] = useState("");
   const MultipleChoiceList = ["Male", "Female", "Other"];
-  const ageList = Array.from({ length: 90 }, (_, index) => index + 10)
+  const ageList = ["0 - 10", "11 - 20", "21 - 30", "31 - 40", "41 - 50", "51 - 60", "61 - 70", "71 - 80", "81 - 90", "91 - 100"]
+  // Array.from({ length: 90 }, (_, index) => index + 10)
   const zipCodeList = ["11411", "11412", "11413", "11423", "11429/11428", "11434", "11435/11436"]
-  const neighborhoodList = ["Cambria Heights", "Saint Alban", "Spring Albans","Springfield GardEventSource", "Saint Albans", "Hollis", "Queens Village", "Rochdale Village", "Jamaica"]
-  const genderList = [""]
+  const neighborhoodList = ["Cambria Heights", "Saint Alban", "Spring Albans", "Springfield Garden", "Saint Albans", "Hollis", "Queens Village", "Rochdale Village", "Jamaica"]
+  const genderList = ["Male", "Female", "Other"]
 
-  const requestsList = ["Therapeutic Services", "Health Services", "Legal Aid", "Assistance for Youth", "COVID Support (eg. PPE Supplies)", "Transit", "Food", "Housing Support", "Access to Education", "Domestic Violence Support", "Other"];
+  const requestsList = ["Therapeutic Wellness Services", "Emergency Support", "Youth Leadership / Development / Mentorship", "Housing", "Education", "Transportation", "Workforce Development", "Financial Literacy"];
   // const [filterRequestType, setFilterRequestType] = useState(""); 
   // const [specificFilter, setSpecificFilter] = useState(""); 
   const [trends, setTrends] = useState(true);
@@ -56,8 +57,8 @@ function App() {
   }
 
   function handleSave(event) {
-console.log("");
-    
+    console.log("");
+
   }
 
   function handleChange(event, setFunction) {
@@ -84,20 +85,18 @@ console.log("");
           <div><TextQ name="name" label="Name:" handleChange={e => handleChange(e, setName)} /></div>
           <div><TextQ name="phone" label="Phone Number" handleChange={e => handleChange(e, setPhone)} /></div>
           <div><TextQ name="email" label="Email address" handleChange={e => handleChange(e, setEmail)} /></div>
-          <div><Select label="Zipcode" handleChange={e => handleChange(e, setZipcode)} values={zipCodeList} /></div>
-          {/* <div style = {styles.row}> */}
-          <div><Select label="Neighborhood" handleChange={e => handleChange(e, setZipcode)} values={neighborhoodList} /></div>
-          {/* </div> */}
-          <div><Select label="Age Range" handleChange={e => handleChange(e, setAge)} values={ageList} /></div>
-          <div><Multichoice name="gender" label="Gender" values={MultipleChoiceList} handleChange={e => handleChange(e, setGender)} /> </div>
+          <div style={styles.first}><Select label="Zipcode" handleChange={e => handleChange(e, setZipcode)} values={zipCodeList} /></div>
+          <div style={styles.second}><Select label="Neighborhood" handleChange={e => handleChange(e, setZipcode)} values={neighborhoodList} /></div>
+          <div style={{ float: "left", width: "100%" }}> </div>
+          <div style={styles.first}> <Select label="Age Range" handleChange={e => handleChange(e, setAge)} values={ageList} /></div>
+          <div style={styles.second}> <Select label="Gender" handleChange={e => handleChange(e, setGender)} values={genderList} /></div>
+          {/* <div><Multichoice name="gender" label="Gender" values={MultipleChoiceList} handleChange={e => handleChange(e, setGender)} /> </div> */}
           <Header title="FAMILY INFORMATION" />
-          <div><Select label="How many people are in your household (excluding yourself)?" handleChange={e => handleChange(e, setNumPeople)} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
-          <div style={{ display: "block" }}>
-            <div ><Select label="How many children?" handleChange={e => handleChange(e, setNumChildren)} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
-            <div ><Select label="How many seniors?" handleChange={e => handleChange(e, setNumSeniors)} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
-          </div>
+          <div style={{ width: "70%", marginLeft: "1%" }} > <Select label="How many people are in your household (excluding yourself)?" handleChange={e => handleChange(e, setNumPeople)} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
+          <div style={styles.first}><Select label="How many children?" handleChange={e => handleChange(e, setNumChildren)} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
+          <div style={styles.second}> <Select label="How many seniors?" handleChange={e => handleChange(e, setNumSeniors)} values={["0", "1", "2", "3", "4", "5", "6", "7", "8 +"]} /></div>
           <Header title="REQUESTS" />
-          <div><Select label="Type of Request" handleChange={e => handleChange(e, setRequestType)} values={requestsList} /></div>
+          <div style={{ width: "50%", marginLeft: "2.5%" }}><Select label="Type of Request" handleChange={e => handleChange(e, setRequestType)} values={requestsList} /></div>
           <div><LargeTextQ name="request" label="Request" handleChange={e => handleChange(e, setRequest)} placeholder="Describe the situation + what you need?" /> </div>
           <div><Multichoice name="emergency" label="Is this an Emergency?" values={["Yes", "No"]} handleChange={e => handleChange(e, setEmergency)} /></div>
         </form>
@@ -127,7 +126,7 @@ console.log("");
 
       <div>
         <div>
-          <GraphHeader title1="TRENDS" title2="REQUESTS" trends={trends} setTrends={setTrends}/>
+          <GraphHeader title1="TRENDS" title2="REQUESTS" trends={trends} setTrends={setTrends} />
         </div>
         <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
         {/* <Graph />
@@ -151,11 +150,11 @@ console.log("");
           handleChange={console.log("complete")}
         /> */}
 
-        
-        {trends ? 
-          <div style = {styles.trends}>
-            <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList}/>
-            
+
+        {trends ?
+          <div style={styles.trends}>
+            <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList} />
+
             {/* <p>{settings}</p> */}
             <div>
               <Graph />
@@ -171,25 +170,25 @@ console.log("");
                     <Select request={true} label="Choose Specific" handleChange={e => handleChange (e, setSpecificFilter)} values={["Time Period 1", "Time Period 2", "Time Period 3"]}/>
             } */}
           </div>
-        :
-        <div style = {styles.trends}>
-          <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList}/>
-        
-        {/* <p>{settings}</p> */}
-        
-       
+          :
+          <div style={styles.trends}>
+            <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList} />
 
-          <RequestCard 
-            name="John Penridge" 
-            phone="215-512-1402" 
-            email="example@gmail.com" 
-            requestTag = "Food" 
-            emergency={true}
-            requestText = "I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
-            handleChange = {console.log("complete")}
+            {/* <p>{settings}</p> */}
+
+
+
+            <RequestCard
+              name="John Penridge"
+              phone="215-512-1402"
+              email="example@gmail.com"
+              requestTag="Food"
+              emergency={true}
+              requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+              handleChange={console.log("complete")}
             />
-       </div>
-      }
+          </div>
+        }
         {/* <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={[]} /> */}
         {/* {selectedFilters.map((val, i) => <p>{val}</p> )} */}
         {/* <ActiveFilters selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} /> */}
@@ -200,13 +199,16 @@ console.log("");
 }
 
 const styles = {
+  first: { float: "left", width: "25%", marginLeft: "3.5%" },
   header: {
     backgroundColor: "#F08633",
     color: "white",
     paddingBottom: 20
   },
-  row: {
-    float: "right"
+  second: { float: "left", width: "25%", },
+  selected: {
+    width: "25%",
+    marginLeft: "3.5%"
   },
   submit: {
     justifyContent: "flex-end",

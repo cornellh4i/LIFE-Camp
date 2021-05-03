@@ -62,7 +62,7 @@ const styles = {
   filters: {
     marginLeft:"5%", 
     float: "left", 
-    height:"100%"
+    // height:"100%"
   },
   label: {
     fontWeight:"500", 
