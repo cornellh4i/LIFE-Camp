@@ -13,7 +13,7 @@ const Select = props => {
       <label style={styles.inputLabel}> {props.label} </label>
 
       <select style={props.request ? styles.requestSelect : styles.select } value={value} onChange={valueHandler}>
-      <option value="" disabled selected>{props.placeholder}</option>
+      <option value="" disabled selected >{props.placeholder}</option>
         {props.values.map((val, i) => <option key={val} value={val}>{val}</option>)}
       </select>
     </div >
@@ -34,7 +34,7 @@ const styles = ({
     borderRadius: "20px",
     borderColor: "#7D7674",
     borderWidth: 1,    
-    paddingLeft: "10px"
+    paddingLeft: "10px", 
   },
   inputLabel: {
     color: "black",
@@ -58,7 +58,10 @@ const styles = ({
     borderRadius: "8px",
     border: "1px solid #C4C4C4",
     borderWidth: 1,    
-    paddingLeft: "10px"
+    paddingLeft: "10px",
+    fontColor: "#C4C4C4", 
+    fontFamily: "SF Pro Display", 
+    fontWeight: "500"
   }
 
 });
