@@ -9,7 +9,7 @@ const TextQ = props => {
 
 const styles = ({
   input: {
-    width: "30%",
+    width: "40%",
     height: "35px",
     display: "inline",
     alignItems: "right",
@@ -17,18 +17,17 @@ const styles = ({
     margin: "auto",
     marginTop: 5,
     marginBottom: 15,
-    marginRight: "60%",
+    marginRight: "50%",
     lineHeight: "20px",
     borderRadius: "20px",
     borderColor: "#7D7674",
     borderWidth: 1,
-    paddingLeft: "10px"
   },
   inputLabel: {
     color: "black",
     display: "flex",
     justifyContent: "left",
-    font:"Georgia",
+    font: "Georgia",
     fontSize: 18,
     paddingLeft: "5%",
     fontWeight: "500",
