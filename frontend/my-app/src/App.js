@@ -1,4 +1,5 @@
 import './App.css';
+import './index.css';
 import { useState } from 'react';
 import TextQ from './components/TextQ';
 import Header from './components/Header';
@@ -38,9 +39,10 @@ function App() {
   // Array.from({ length: 90 }, (_, index) => index + 10)
   const zipCodeList = ["11411", "11412", "11413", "11423", "11429/11428", "11434", "11435/11436"]
   const neighborhoodList = ["Cambria Heights", "Saint Alban", "Spring Albans", "Springfield Garden", "Saint Albans", "Hollis", "Queens Village", "Rochdale Village", "Jamaica"]
-  const genderList = ["Male", "Female", "Other"]
+  const genderList = ["Male", "Female", "Other "]
 
-  const requestsList = ["Therapeutic Wellness Services", "Emergency Support", "Youth Leadership / Development / Mentorship", "Housing", "Education", "Transportation", "Workforce Development", "Financial Literacy"];
+  const requestsList = ["Therapeutic Wellness Services", "Mental / Emotional Health Counseling", "Physical / Medical Health Referral", "Nutrition / Food Support", "COVID-related support (PPE, Health Services, etc.)",
+    "Emergency Support", "Safety transfer / mediation support", "Domestic Violence", "Emergency Funds", "Legal Aid Services", "Police", "Community Relations", "Other", "Youth Leadership / Development / Mentorship", "Housing", "Education", "Transportation", "Workforce Development", "Financial Literacy"];
   // const [filterRequestType, setFilterRequestType] = useState(""); 
   // const [specificFilter, setSpecificFilter] = useState(""); 
   const [trends, setTrends] = useState(true);
@@ -72,11 +74,11 @@ function App() {
         <div style={styles.header}>
           <div style={{ display: "flex" }}>
             <img className="lifeCampLogo" src={lifeCampLogo} />
-            <button style={styles.submit} onClick={handleScreenChange}> Go to Graph </button>
+            <button className="button" style={styles.submit} onClick={handleScreenChange}> Go to Graph </button>
 
           </div>
           <h1>MAKE A REQUEST</h1>
-          <p className="text">Fill out this form to make a request to LIFE Camp!</p>
+          <h3 className="text">Fill out this form to make a request to LIFE Camp!</h3>
         </div>
         <div>
           <Header title="PERSONAL INFORMATION" />
@@ -100,7 +102,7 @@ function App() {
           <div><LargeTextQ name="request" label="Request" handleChange={e => handleChange(e, setRequest)} placeholder="Describe the situation + what you need?" /> </div>
           <div><Multichoice name="emergency" label="Is this an Emergency?" values={["Yes", "No"]} handleChange={e => handleChange(e, setEmergency)} /></div>
         </form>
-        <button style={styles.submit} onClick={handleSubmit}>SUBMIT</button>
+        <button className="button" style={styles.submit} onClick={handleSubmit}>SUBMIT</button>
 
         {showOutput ?
           <div>
@@ -128,9 +130,9 @@ function App() {
         <div>
           <GraphHeader title1="TRENDS" title2="REQUESTS" trends={trends} setTrends={setTrends} />
         </div>
-        <button style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
-        {/* <Graph />
-        <Select label="Filter Type of Request" handleChange={e => handleChange(e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]} />
+        <button className="button" style={styles.submit} onClick={handleScreenChange}> Go to Survey </button>
+        {/* <Graph /> */}
+        {/* <Select label="Filter Type of Request" handleChange={e => handleChange(e, setFilterRequestType)} values={["Age Range", "Zipcode", "Time Period"]} />
         {
           filterRequestType === "Age Range" ?
             <Select label="Choose Specific" handleChange={e => handleChange(e, setSpecificFilter)} values={["0-18", "18-60", "60+"]} />
@@ -171,22 +173,50 @@ function App() {
             } */}
           </div>
           :
-          <div style={styles.trends}>
+          <div style={styles.requests}>
             <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList} />
 
             {/* <p>{settings}</p> */}
 
+            <div style={styles.requestCards}>
 
-
-            <RequestCard
-              name="John Penridge"
-              phone="215-512-1402"
-              email="example@gmail.com"
-              requestTag="Food"
-              emergency={true}
-              requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
-              handleChange={console.log("complete")}
-            />
+              <RequestCard
+                name="John Penridge"
+                phone="215-512-1402"
+                email="example@gmail.com"
+                requestTag="Food"
+                emergency={true}
+                requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+                handleChange={console.log("complete")}
+              />
+              <RequestCard
+                name="John Penridge"
+                phone="215-512-1402"
+                email="example@gmail.com"
+                requestTag="Food"
+                emergency={true}
+                requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+                handleChange={console.log("complete")}
+              />
+              <RequestCard
+                name="John Penridge"
+                phone="215-512-1402"
+                email="example@gmail.com"
+                requestTag="Food"
+                emergency={true}
+                requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+                handleChange={console.log("complete")}
+              />
+              <RequestCard
+                name="John Penridge"
+                phone="215-512-1402"
+                email="example@gmail.com"
+                requestTag="Food"
+                emergency={true}
+                requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+                handleChange={console.log("complete")}
+              />
+            </div>
           </div>
         }
         {/* <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={[]} /> */}
@@ -210,14 +240,21 @@ const styles = {
     width: "25%",
     marginLeft: "3.5%"
   },
+  requestCards: {
+    display: "flex",
+    // flexDirection: "row",
+    // flexWrap: "wrap",
+    flexFlow: "row wrap ",
+    // justifyContent: "flex-start",
+    alignContent: "space-between",
+  },
   submit: {
     justifyContent: "flex-end",
-    color: "#F08633",
+    // color: "#F08633",
     fontSize: 15,
     width: "10%",
     height: "35px",
     display: "inline",
-    backgroundColor: 'white',
     lineHeight: "20px",
     borderColor: "#F08633",
     borderWidth: 1,

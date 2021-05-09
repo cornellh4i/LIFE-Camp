@@ -7,7 +7,49 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1 {
+  font-family: Be Vietnam;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 70px;
+}
+
+h2 {
+  font-family: Be Vietnam;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 47px;
+}
+
+h3{
+  font-family: Georgia;
+font-style: normal;
+font-weight: bold;
+font-size: 20px;
+line-height: 27px;
+}
+
+.form-mobile{
+  font-family: 'Source Sans Pro', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.045em;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+.button {
+  transition-duration: 0.2s;
+  color: #F08633;
+  background: white;
+}
+.button:hover {
+  background-color: #F08633;; /* Green */
+  color: white;
+  
 }

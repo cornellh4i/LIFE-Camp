@@ -33,6 +33,7 @@ const styles = ({
     fontSize: 18,
     paddingLeft: "5%",
     fontWeight: "500",
+    fontFamily: "Georgia",
 
   }
 

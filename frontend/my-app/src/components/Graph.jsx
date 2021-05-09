@@ -51,14 +51,15 @@ class Graph extends Component {
       data: [
         {
           type: "column",
-          dataPoints: dataPoints
-          // [
-          //   { label: "Apple", y: 10 },
-          //   { label: "Orange", y: 15 },
-          //   { label: "Banana", y: 25 },
-          //   { label: "Mango", y: 30 },
-          //   { label: "Grape", y: 28 }
-          // ]
+          dataPoints:
+            dataPoints
+            // [
+            //   { label: "Emergency Funds", y: 10 },
+            //   { label: "Police", y: 15 },
+            //   { label: "Covid Relief", y: 25 },
+            //   { label: "Food Support", y: 30 },
+            //   { label: "Other", y: 28 }
+            // ]
         }
       ]
     }

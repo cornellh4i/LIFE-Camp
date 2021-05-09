@@ -2,6 +2,7 @@ const TextQ = props => {
   return (
     <div>
       <label style={styles.inputLabel}> {props.label} </label>
+
       <input style={styles.input} type="text" name={props.name} onChange={props.handleChange} />
     </div>
   )
@@ -22,12 +23,13 @@ const styles = ({
     borderRadius: "20px",
     borderColor: "#7D7674",
     borderWidth: 1,
+    paddingLeft: "8px"
   },
   inputLabel: {
     color: "black",
     display: "flex",
     justifyContent: "left",
-    font: "Georgia",
+    fontFamily: "Georgia",
     fontSize: 18,
     paddingLeft: "5%",
     fontWeight: "500",
