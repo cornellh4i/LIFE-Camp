@@ -1,8 +1,10 @@
 import csv
 import datetime
 from db import db 
-from db import Question, Survey
+from db import Question, Survey, User
 from flask import Flask, request
+from flask.ext.bcrypt import Bcrypt
+from flask.ext.login import LoginManager, LoginForm, login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 import json
 from sqlalchemy import func
@@ -26,14 +28,61 @@ def success_response(data, code=200):
 def failure_response(message, code=404):
     return json.dumps({"success": False, "error": message}), code
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+bcrypt = Bcrypt()
+
+@login_manager.user_loader
+def user_loader(user_id):
+    """Given *user_id*, return the associated User object.
+
+    :param unicode user_id: user_id (email) user to retrieve
+
+    """
+    return User.query.get(user_id)    
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """For GET requests, display the login form. 
+    For POSTS, login the current user by processing the form.
+
+    """
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.get(form.email.data)
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                user.authenticated = True
+                db.session.add(user)
+                db.session.commit()
+                login_user(user, remember=True)
+                return success_response(user)
+    return failure_response("Invalid login")
+
+
+@app.route("/logout", methods=["GET"])
+@login_required
+def logout():
+    """Logout the current user."""
+    user = current_user
+    user.authenticated = False
+    db.session.add(user)
+    db.session.commit()
+    logout_user()
+    return success_response(user)
+
 
 @app.route('/questions/')
+@login_required
 def all_questions():
    result = [q.serialize() for q in Question.query.all()]
    return success_response(result)
 
 
 @app.route('/questions/', methods=["POST"])
+@login_required
 def add_question():
    body = json.loads(request.data)
    new_q = Question(text=body.get("text"), qtype=body.get("qtype"), stype=body.get("stype"))
@@ -43,12 +92,14 @@ def add_question():
 
 
 @app.route('/responses/')
+@login_required
 def all_responses():
    result = [r.serialize() for r in Survey.query.all()]
    return success_response(result)
 
 
 @app.route('/responses/', methods=["POST"])
+@login_required
 def add_response():
     body = json.loads(request.data)
     new_r = Survey(response_id=body.get("response_id"), description=body.get("description"), answer_text=body.get("answer_text"), question_id=body.get("question_id"))
@@ -58,6 +109,7 @@ def add_response():
 
 
 @app.route('/responses/ct/<int:id>/')
+@login_required
 def get_cts(id):
     filtered = Survey.query.filter_by(question_id=id)
     all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
@@ -65,6 +117,7 @@ def get_cts(id):
 
 
 @app.route('/addressed/<int:survey_id>/', methods=["POST"])
+@login_required
 def markAddressed(survey_id):
     survey = Survey.query.get(survey_id)
     survey.addressed = True
@@ -73,6 +126,7 @@ def markAddressed(survey_id):
 
 
 @app.route('/filter/')
+@login_required
 def filter_queries():
     body = json.loads(request.data)
     age = body.get("age", "")
@@ -90,25 +144,6 @@ def filter_queries():
     result = {i for i in all_ids if all_ids.count(i) == 3}
     return success_response(list(result))
     
-# filter route
-# input
-# {
-#   "age": "",
-#   "zipcode": "",
-#   "start_date": "",
-#   "end_date":
-# }
-
-# @app.route('/filter_date/')
-# def filter_by_date():
-#     body = json.loads(request.data)
-#     date1 = body.get("start_date", "") # take in string of format %Y-%m-%d
-#     date2 = body.get("end_date", "")
-#     if len(date1) == 0 or len(date2) == 0:
-#         return failure_response("Invalid date(s)")
-#     query = db.session.query(Survey).filter(Survey.time_of_submit.between(date1, date2)) # date is automatically midnight, so if want one day, have to go from 4/19 -> 4/20
-#     result = [q.serialize() for q in query]
-#     return success_response(result)
 
 def surveyJSON(response_id):
     json = {}
@@ -144,7 +179,7 @@ def convertToCSV():
             records = Question.query.all()
             for r in records:
                 csvWriter.writerow([r.id, r.text, r.qtype, r.stype])
-                
+
 
 if __name__ == '__main__':
     convertToCSV()
