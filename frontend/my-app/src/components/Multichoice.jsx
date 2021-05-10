@@ -21,6 +21,7 @@ const styles = ({
     paddingLeft: "5%",
     fontWeight: "500",
     marginBottom: 10,
+    fontFamily: "Georgia",
   },
   radios: {
     justifyContent: "flex-start",

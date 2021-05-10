@@ -11,9 +11,19 @@ const Select = props => {
   return (
     <div >
       <label style={styles.inputLabel}> {props.label} </label>
-      <select style={props.request ? styles.requestSelect : styles.select } value={value} onChange={valueHandler}>
-      <option value="" disabled selected >{props.placeholder}</option>
-        {props.values.map((val, i) => <option key={val} value={val}>{val}</option>)}
+
+      <select style={props.request ? styles.requestSelect : styles.select} value={value} onChange={valueHandler}>
+        <option value="" disabled selected >{props.placeholder}</option>
+        {props.values.map((val, i) =>
+          val === "Emergency Support" || val === "Therapeutic Wellness Services" || val === "Other" ?
+            <option key={val} disabled value={val}>{val}</option>
+            :
+            <option key={val} value={val}>{val}</option>
+
+
+
+        )
+        }
       </select>
     </div >
   )
@@ -33,8 +43,9 @@ const styles = ({
     lineHeight: "20px",
     borderRadius: "20px",
     borderColor: "#7D7674",
-    borderWidth: 1,    
-    paddingLeft: "10px", 
+    borderWidth: 1,
+    paddingLeft: "10px",
+    fontFamily: "Georgia",
   },
   inputLabel: {
     color: "black",
@@ -43,6 +54,7 @@ const styles = ({
     fontSize: 18,
     paddingLeft: "5%",
     fontWeight: "500",
+    fontFamily: "Georgia",
   },
   requestSelect: {
     width: "100%",
@@ -57,10 +69,10 @@ const styles = ({
     lineHeight: "20px",
     borderRadius: "8px",
     border: "1px solid #C4C4C4",
-    borderWidth: 1,    
+    borderWidth: 1,
     paddingLeft: "10px",
-    fontColor: "#C4C4C4", 
-    fontFamily: "SF Pro Display", 
+    fontColor: "#C4C4C4",
+    fontFamily: "Source Sans Pro",
     fontWeight: "500"
   }
 
