@@ -3,9 +3,10 @@ import datetime
 from db import db 
 from db import Question, Survey, User
 from flask import Flask, request
-from flask.ext.bcrypt import Bcrypt
-from flask.ext.login import LoginManager, LoginForm, login_user, logout_user, current_user
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_sqlalchemy import SQLAlchemy
+from form import LoginForm
 import json
 from sqlalchemy import func
 import sqlite3
