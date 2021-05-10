@@ -117,13 +117,13 @@ def get_cts(id):
     return success_response(dict(all_cts))
 
 
-@app.route('/addressed/<int:survey_id>/', methods=["POST"])
+@app.route('/addressed/<int:response_id>/', methods=["POST"])
 @login_required
-def markAddressed(survey_id):
-    survey = Survey.query.get(survey_id)
-    survey.addressed = True
-    db.session.commit()
-    return success_response(survey.serialize())
+def mark_addressed(response_id):
+    survey = Survey.query.filter_by(response_id=response_id)
+    for s in survey: 
+        s.addressed = True
+    return success_response(survey)
 
 
 @app.route('/filter/')
