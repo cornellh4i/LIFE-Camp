@@ -127,13 +127,16 @@ const styles = ({
     color: "black"
   },
   emergencyContainer: {
-    display: "inline",
-    height: "30px",
-    width: "100px",
+    display: "flex",
+    flexDirection: "row", 
+    float: "left",
+    height: "3%",
+    width: "35%",
     backgroundColor: "#FFB383",
     marginLeft: "1%",
     marginRight: "5%",
-    padding: "5px",
+    marginBottom: "1%",
+    paddingBottom: "5px",
     color: "black",
     alignItems: "center"
   }
