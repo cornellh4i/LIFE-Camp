@@ -13,9 +13,10 @@ import RequestCard from './components/RequestCard';
 import Filter from './components/Filter';
 import ActiveFilters from './components/ActiveFilters';
 import FilterSideBar from './components/FilterSideBar';
+import Login from './components/Login';
 
 function App() {
-
+  const [showLogin, setShowLogin] = useState(true); 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
@@ -67,6 +68,9 @@ function App() {
   }
 
   return (
+    showLogin ? 
+      <Login handler={setShowLogin}/>
+      :
     showSurvey ?
       <div className="App">
         <div style={styles.header}>
@@ -175,8 +179,7 @@ function App() {
             <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList} />
 
             {/* <p>{settings}</p> */}
-
-
+            <div style={styles.requestCards}>
 
             <RequestCard
               name="John Penridge"
@@ -187,6 +190,26 @@ function App() {
               requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
               handleChange={console.log("complete")}
             />
+            <RequestCard
+              name="John Penridge"
+              phone="215-512-1402"
+              email="example@gmail.com"
+              requestTag="Food"
+              emergency={true}
+              requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+              handleChange={console.log("complete")}
+            />
+            <RequestCard
+              name="John Penridge"
+              phone="215-512-1402"
+              email="example@gmail.com"
+              requestTag="Food"
+              emergency={true}
+              requestText="I am requesting for some food services on the corner of 8th and 9th street on the first two Mondays of every month because (insert reason)"
+              handleChange={console.log("complete")}
+            />
+            
+            </div>
           </div>
         }
         {/* <Filter selectedFilters={selectedFilters} addFilter={setSelectedFilters} label="Choose Specific" handleChange={handleRequestTypeChange} values={[]} /> */}
@@ -226,5 +249,9 @@ const styles = {
     marginBottom: 30,
     marginLeft: "70%",
   },
+  requestCards: {
+    display:"inline-flex", 
+    // float: "left"
+  }
 }
 export default App;

@@ -11,17 +11,9 @@ const Select = props => {
   return (
     <div >
       <label style={styles.inputLabel}> {props.label} </label>
-
       <select style={props.request ? styles.requestSelect : styles.select } value={value} onChange={valueHandler}>
       <option value="" disabled selected >{props.placeholder}</option>
         {props.values.map((val, i) => <option key={val} value={val}>{val}</option>)}
-
-        {/* {props.values.map((val, i) => {
-          if (val === "Emergency Support" || "Therapeutic Wellness Services") { <option key={val} disabled value={val}><strong>{val}</strong></option> }
-          else 
-         <option key={val} value={val}>{val}</option> 
-        } */}
-        )}
       </select>
     </div >
   )

@@ -21,7 +21,7 @@ const RequestCard = props => {
           {props.emergency ? 
               <div style={styles.emergencyContainer}>
               <img style={{display:"inline"}}src = {Danger}/> 
-              <label style={{fontSize: "14 px"}}>Emergency</label>
+              <label style={{fontSize: "14 px"}}>  Emergency</label>
               </div>
               :
               <></>
@@ -46,8 +46,9 @@ const RequestCard = props => {
         boxSizing: "border-box",
         margin:"auto", 
         boxShadow: "#9E9E9E", 
-        marginBottom:"10%"
-
+        marginBottom:"10%",
+        marginLeft: "10%", 
+        marginRight: "10%"
     },
     name:{
       fontSize:"18px",
