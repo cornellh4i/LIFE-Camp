@@ -29,12 +29,12 @@ def success_response(data, code=200):
 def failure_response(message, code=404):
     return json.dumps({"success": False, "error": message}), code
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+#login_manager = LoginManager()
+#login_manager.init_app(app)
+#login_manager.login_view = 'login'
 bcrypt = Bcrypt()
 
-@login_manager.user_loader
+#@login_manager.user_loader
 def user_loader(user_id):
     """Given *user_id*, return the associated User object.
 
@@ -64,7 +64,7 @@ def login():
 
 
 @app.route("/logout", methods=["GET"])
-@login_required
+#@login_required
 def logout():
     """Logout the current user."""
     user = current_user
@@ -76,14 +76,14 @@ def logout():
 
 
 @app.route('/questions/')
-@login_required
+#@login_required
 def all_questions():
    result = [q.serialize() for q in Question.query.all()]
    return success_response(result)
 
 
 @app.route('/questions/', methods=["POST"])
-@login_required
+#@login_required
 def add_question():
    body = json.loads(request.data)
    new_q = Question(text=body.get("text"), qtype=body.get("qtype"), stype=body.get("stype"))
@@ -93,14 +93,14 @@ def add_question():
 
 
 @app.route('/responses/')
-@login_required
+#@login_required
 def all_responses():
    result = [r.serialize() for r in Survey.query.all()]
    return success_response(result)
 
 
 @app.route('/responses/', methods=["POST"])
-@login_required
+#@login_required
 def add_response():
     body = json.loads(request.data)
     new_r = Survey(response_id=body.get("response_id"), description=body.get("description"), answer_text=body.get("answer_text"), question_id=body.get("question_id"))
@@ -109,8 +109,45 @@ def add_response():
     return success_response(new_r.serialize(), 201)
 
 
+"""
+{
+    "response_id": 1,
+    "responses": [
+        {
+            "description": "Supplies requested",
+            "answer_text": "clothes",
+            "question_id": 1
+        },
+        {
+            "description": "Name",
+            "answer_text": "Bob",
+            "question_id": 2
+        },
+    ]
+}
+"""
+
+@app.route('/survey/', methods=["POST"])
+#@login_required
+def add_survey():
+    body = json.loads(request.data)
+    response_id = body.get("response_id")
+    responses = body.get("responses")
+    print(type(responses))
+    if not response_id or not responses:
+        return failure_response("Missing required field")
+    added = []
+    for r in responses:
+        print(r)
+        new_r = Survey(response_id=response_id, description=r.get("description"), answer_text=r.get("answer_text"), question_id=r.get("question_id"))
+        db.session.add(new_r)
+        db.session.commit()
+        added.append(new_r.serialize())
+    return success_response(added, 201)
+
+
 @app.route('/responses/ct/<int:id>/')
-@login_required
+#@login_required
 def get_cts(id):
     filtered = Survey.query.filter_by(question_id=id)
     all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
@@ -118,7 +155,7 @@ def get_cts(id):
 
 
 @app.route('/addressed/<int:response_id>/', methods=["POST"])
-@login_required
+#@login_required
 def mark_addressed(response_id):
     survey = Survey.query.filter_by(response_id=response_id)
     for s in survey: 
@@ -127,7 +164,7 @@ def mark_addressed(response_id):
 
 
 @app.route('/filter/')
-@login_required
+#@login_required
 def filter_queries():
     body = json.loads(request.data)
     age = body.get("age", "")

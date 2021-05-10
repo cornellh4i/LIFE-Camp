@@ -27,7 +27,7 @@ class Question(db.Model):
 class Survey(db.Model):
     __tablename__ = "survey"
     id = db.Column(db.Integer, primary_key=True)
-    response_id = db.Column(db.String, nullable=False)
+    response_id = db.Column(db.Integer, nullable=False) #change this to be int
     description = db.Column(db.String, nullable=False)
     answer_text = db.Column(db.String, nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey("question.id"), nullable=False)
