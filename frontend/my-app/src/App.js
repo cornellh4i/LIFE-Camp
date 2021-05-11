@@ -245,10 +245,10 @@ const styles = {
   },
   requestCards: {
     display: "flex",
-    // flexDirection: "row",
-    // flexWrap: "wrap",
+    flexDirection: "row",
+    flexWrap: "wrap",
     flexFlow: "row wrap ",
-    // justifyContent: "flex-start",
+    justifyContent: "flex-start",
     alignContent: "space-between",
   },
   submit: {
@@ -267,7 +267,9 @@ const styles = {
     marginLeft: "70%",
   },
   requestCards: {
-    display:"inline-flex", 
+    display:"flex", 
+    flexFlow: "row wrap", 
+    
     // float: "left"
   }
 }
