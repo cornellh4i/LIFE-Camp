@@ -4,8 +4,6 @@ var React = require('react');
 var Component = React.Component;
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-var dataPoints = []
-const requestsList = ["Therapeutic Services", "Health Services", "Legal Aid", "Assistance for Youth", "COVID Support (eg. PPE Supplies)", "Transit", "Food", "Housing Support", "Access to Education", "Domestic Violence Support", "Other"];
 
 CanvasJS.addColorSet("ColorSet",
   [
@@ -17,6 +15,13 @@ CanvasJS.addColorSet("ColorSet",
   ]);
 
 class Graph extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataPoints: [],
+    }
+  }
+
   render() {
     const options = {
       title: {
@@ -46,50 +51,47 @@ class Graph extends Component {
         margin: 10
       },
       dataPointWidth: 40,
-      // width: 500,
-      // height: 400,
       data: [
         {
           type: "column",
           dataPoints:
-            dataPoints
-            // [
-            //   { label: "Emergency Funds", y: 10 },
-            //   { label: "Police", y: 15 },
-            //   { label: "Covid Relief", y: 25 },
-            //   { label: "Food Support", y: 30 },
-            //   { label: "Other", y: 28 }
-            // ]
+            this.state.dataPoints
         }
       ]
     }
     return (
+
       <div style={styles.graph}>
+
         <CanvasJSChart options={options}
-        /* onRef={ref => this.chart = ref} */
+          onRef={ref => this.chart = ref}
         />
-        {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
       </div>
     );
 
   }
   componentDidMount() {
-    var chart = this.chart;
-    // fetch('https://lifecamp.com/responses/ct/{question_id}')  question_id is the id of Type of Requests question
-    fetch('../json_example.json')
+    // var chart = this.chart;
+    var graphData = [];
+    fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/responses/ct/10', { mode: 'cors' })
       .then(function (response) {
         return response.json();
       })
       .then(function (data) {
-        for (var i = 0; i < data.length; i++) {
-          var name = requestsList[i]
-          dataPoints.push({
+        data = data.data;
+        for (var name in data) {
+          console.log(name);
+          graphData.push({
             label: name,
-            y: data[i].name
+            y: data[name]
           });
         }
-        chart.render();
-      });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });;
+    this.setState({ dataPoints: graphData });
+    console.log(this.state.dataPoints);
   }
 }
 const styles = {
