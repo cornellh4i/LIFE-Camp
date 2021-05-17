@@ -1,18 +1,38 @@
 import csv
 import datetime
 from db import db 
-from db import Question, Survey, User
-from flask import Flask, request
-from flask_bcrypt import Bcrypt
+from db import Question, Survey
+from flask import Flask, request, jsonify
+# from flask_bcrypt import Bcrypt
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    jwt_required, create_refresh_token,
+    get_jwt_identity, set_access_cookies,
+    set_refresh_cookies, unset_jwt_cookies
+)
+#from werkzeug.security import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from form import LoginForm
 import json
+import os
 from sqlalchemy import func
 import sqlite3
 
 #post reponse: responseID, question, and the separate answers
 app = Flask(__name__)
+
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+
+app.config['JWT_ACCESS_COOKIE_PATH'] = '/api/'
+app.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
+
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
+
+# Set the secret key to sign the JWTs with
+app.config['JWT_SECRET_KEY'] = 'secret'  # Change this!
+
+jwt = JWTManager(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -20,7 +40,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # initialize app
 db.init_app(app)
 with app.app_context():
-    db.create_all()
+        db.create_all()
 
 # generalized response formats
 def success_response(data, code=200):
@@ -29,61 +49,53 @@ def success_response(data, code=200):
 def failure_response(message, code=404):
     return json.dumps({"success": False, "error": message}), code
 
-#login_manager = LoginManager()
-#login_manager.init_app(app)
-#login_manager.login_view = 'login'
-bcrypt = Bcrypt()
-
-#@login_manager.user_loader
-def user_loader(user_id):
-    """Given *user_id*, return the associated User object.
-
-    :param unicode user_id: user_id (email) user to retrieve
-
-    """
-    return User.query.get(user_id)    
-
-
-@app.route("/login", methods=["GET", "POST"])
+@app.route('/token/auth', methods=['POST'])
 def login():
-    """For GET requests, display the login form. 
-    For POSTS, login the current user by processing the form.
+    body = json.loads(request.data)
+    username = body.get('username', None)
+    password = body.get('password', None)
+    if not username or not password:
+        return jsonify({'login': False}), 401
 
-    """
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.get(form.email.data)
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                user.authenticated = True
-                db.session.add(user)
-                db.session.commit()
-                login_user(user, remember=True)
-                return success_response(user)
-    return failure_response("Invalid login")
+    # Create the tokens we will be sending back to the user
+    access_token = create_access_token(identity=username)
+    refresh_token = create_refresh_token(identity=username)
+
+    # Set the JWT cookies in the response
+    resp = jsonify({'login': True, 'acc_token': access_token, 'refresh tok': refresh_token})
+    set_access_cookies(resp, access_token)
+    set_refresh_cookies(resp, refresh_token)
+    return resp, 200
+
+@app.route('/token/refresh', methods=['POST'])
+@jwt_required()
+def refresh():
+    # Create the new access token
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+
+    # Set the JWT access cookie in the response
+    resp = jsonify({'refresh': True})
+    set_access_cookies(resp, access_token)
+    return resp, 200
 
 
-@app.route("/logout", methods=["GET"])
-#@login_required
+@app.route('/token/remove', methods=['POST'])
 def logout():
-    """Logout the current user."""
-    user = current_user
-    user.authenticated = False
-    db.session.add(user)
-    db.session.commit()
-    logout_user()
-    return success_response(user)
+    resp = jsonify({'logout': True})
+    unset_jwt_cookies(resp)
+    return resp, 200
 
 
 @app.route('/questions/')
-#@login_required
+@jwt_required()
 def all_questions():
    result = [q.serialize() for q in Question.query.all()]
    return success_response(result)
 
 
 @app.route('/questions/', methods=["POST"])
-#@login_required
+@jwt_required()
 def add_question():
    body = json.loads(request.data)
    new_q = Question(text=body.get("text"), qtype=body.get("qtype"), stype=body.get("stype"))
@@ -93,14 +105,14 @@ def add_question():
 
 
 @app.route('/responses/')
-#@login_required
+@jwt_required()
 def all_responses():
    result = [r.serialize() for r in Survey.query.all()]
    return success_response(result)
 
 
 @app.route('/responses/', methods=["POST"])
-#@login_required
+@jwt_required()
 def add_response():
     body = json.loads(request.data)
     new_r = Survey(response_id=body.get("response_id"), description=body.get("description"), answer_text=body.get("answer_text"), question_id=body.get("question_id"))
@@ -128,7 +140,7 @@ def add_response():
 """
 
 @app.route('/survey/', methods=["POST"])
-#@login_required
+@jwt_required()
 def add_survey():
     body = json.loads(request.data)
     response_id = body.get("response_id")
@@ -147,7 +159,7 @@ def add_survey():
 
 
 @app.route('/responses/ct/<int:id>/')
-#@login_required
+@jwt_required()
 def get_cts(id):
     filtered = Survey.query.filter_by(question_id=id)
     all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
@@ -155,7 +167,7 @@ def get_cts(id):
 
 
 @app.route('/addressed/<int:response_id>/', methods=["POST"])
-#@login_required
+@jwt_required()
 def mark_addressed(response_id):
     survey = Survey.query.filter_by(response_id=response_id)
     for s in survey: 
@@ -164,7 +176,7 @@ def mark_addressed(response_id):
 
 
 @app.route('/filter/')
-#@login_required
+@jwt_required()
 def filter_queries():
     body = json.loads(request.data)
     age = body.get("age", "")
