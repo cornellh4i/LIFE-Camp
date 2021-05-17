@@ -43,8 +43,9 @@ class Graph extends Component {
         title: "Frequency of Response",
         gridColor: "#B2B2B2",
         gridDashType: "dot",
-        margin: 10,
+        margin: 1,
         lineThickness: 0,
+        minimum: 0,
       },
       axisX: {
         title: "Types of Requests",
@@ -71,14 +72,15 @@ class Graph extends Component {
 
   }
   componentDidMount() {
-    // var chart = this.chart;
-    var graphData = [];
+
+    var that = this;
     fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/responses/ct/10', { mode: 'cors' })
       .then(function (response) {
         return response.json();
       })
       .then(function (data) {
         data = data.data;
+        var graphData = [];
         for (var name in data) {
           console.log(name);
           graphData.push({
@@ -86,12 +88,16 @@ class Graph extends Component {
             y: data[name]
           });
         }
-      })
+        return graphData
+      }).then(graphData => {
+        that.setState({ dataPoints: graphData });
+        console.log(this.state.dataPoints);
+      }
+      )
       .catch((error) => {
         console.error('Error:', error);
       });;
-    this.setState({ dataPoints: graphData });
-    console.log(this.state.dataPoints);
+
   }
 }
 const styles = {
