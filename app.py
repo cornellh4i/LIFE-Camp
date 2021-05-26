@@ -68,7 +68,7 @@ def login():
     return resp, 200
 
 @app.route('/token/refresh', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def refresh():
     # Create the new access token
     current_user = get_jwt_identity()
@@ -88,14 +88,14 @@ def logout():
 
 
 @app.route('/questions/')
-@jwt_required()
+# @jwt_required()
 def all_questions():
    result = [q.serialize() for q in Question.query.all()]
    return success_response(result)
 
 
 @app.route('/questions/', methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def add_question():
    body = json.loads(request.data)
    new_q = Question(text=body.get("text"), qtype=body.get("qtype"), stype=body.get("stype"))
@@ -105,14 +105,18 @@ def add_question():
 
 
 @app.route('/responses/')
-@jwt_required()
+# @jwt_required()
 def all_responses():
-   result = [r.serialize() for r in Survey.query.all()]
-   return success_response(result)
+    result = []
+    for res in Survey.query.with_entities(Survey.response_id).distinct():
+        id = int(res[0])
+        j = surveyJSON(id)
+        result.append(j)
+    return success_response(result)
 
 
 @app.route('/responses/', methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def add_response():
     body = json.loads(request.data)
     new_r = Survey(response_id=body.get("response_id"), description=body.get("description"), answer_text=body.get("answer_text"), question_id=body.get("question_id"))
@@ -140,7 +144,7 @@ def add_response():
 """
 
 @app.route('/survey/', methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def add_survey():
     body = json.loads(request.data)
     response_id = body.get("response_id")
@@ -159,7 +163,7 @@ def add_survey():
 
 
 @app.route('/responses/ct/<int:id>/')
-@jwt_required()
+# @jwt_required()
 def get_cts(id):
     filtered = Survey.query.filter_by(question_id=id)
     all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
@@ -167,7 +171,7 @@ def get_cts(id):
 
 
 @app.route('/addressed/<int:response_id>/', methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def mark_addressed(response_id):
     survey = Survey.query.filter_by(response_id=response_id)
     for s in survey: 
@@ -176,7 +180,7 @@ def mark_addressed(response_id):
 
 
 @app.route('/filter/')
-@jwt_required()
+# @jwt_required()
 def filter_queries():
     body = json.loads(request.data)
     age = body.get("age", "")
