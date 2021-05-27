@@ -1,0 +1,13 @@
+1,Name,text,all
+2,Phone Number,text,all
+3,Email address,text,all
+4,Zipcode,text,all
+5,Neighborhood,text,all
+6,Age Range,multiple_choice,all
+7,Gender,multiple_choice,all
+8,How many people are in your household (excluding yourself)?,multiple_choice,all
+9,How many children?,multiple_choice,all
+10,How many seniors?,multiple_choice,all
+11,Type of Request,multiple_choice,all
+12,Request,text,all
+13,Is this an Emergency?,multiple_choice,all

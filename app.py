@@ -166,9 +166,15 @@ def add_survey():
 @app.route('/responses/ct/<int:id>/')
 @jwt_required()
 def get_cts(id):
-    filtered = Survey.query.filter_by(question_id=id)
-    all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
-    return success_response(dict(all_cts))
+    all_cts = dict()
+    for f in filtered:
+        if f.answer_text not in all_cts:
+            all_cts[f.answer_text] = 1
+        else:
+            all_cts[f.answer_text] += 1
+    return success_response(all_cts)
+   
+    
 
 
 @app.route('/addressed/<int:response_id>/', methods=["POST"])
