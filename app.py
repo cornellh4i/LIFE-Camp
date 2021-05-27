@@ -34,7 +34,7 @@ app.config['JWT_SECRET_KEY'] = 'secret'  # Change this!
 
 jwt = JWTManager(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # initialize app
@@ -199,7 +199,7 @@ def filter_queries():
     # result = {i for i in all_ids if all_ids.count(i) == 3}
     survey_ids = list(all_ids)
     return success_response(list(all_ids))
-    filtered = Survey.query.filter_by(response_id in survey_ids, question_id=10)
+    filtered = Survey.query.filter_by(response_id in survey_ids, question_id=11)
     all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
     return success_response(dict(all_cts))
     
@@ -210,6 +210,8 @@ def surveyJSON(response_id):
         surveys = Survey.query.filter_by(response_id=response_id)
         questions = []
         answers = []
+        time = 0
+        addressed = 0
         for s in surveys:
             questions.append(s.question_id)
             answers.append(s.answer_text)
@@ -222,7 +224,6 @@ def surveyJSON(response_id):
             "time_stamp": time,
             "addressed" : addressed
         }
-        #print(json)
     return json
     
 
