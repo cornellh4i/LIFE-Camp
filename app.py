@@ -167,7 +167,7 @@ def add_survey():
 @jwt_required()
 def get_cts(id):
     filtered = Survey.query.filter_by(question_id=id)
-    all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
+    all_cts = db.session.query(Survey.answer_text).filter_by(question_id=id).count(Survey.answer_text).group_by(Survey.answer_text).all()
     return success_response(dict(all_cts))
 
 
