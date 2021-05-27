@@ -22,7 +22,7 @@ import sqlite3
 #post reponse: responseID, question, and the separate answers
 app = Flask(__name__)
 
-app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
 
 app.config['JWT_ACCESS_COOKIE_PATH'] = '/api/'
 app.config['JWT_REFRESH_COOKIE_PATH'] = '/token/refresh'
