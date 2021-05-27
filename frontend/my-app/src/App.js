@@ -32,6 +32,7 @@ function App() {
   const [showOutput, setShowOutput] = useState(false);
   const [emergency, setEmergency] = useState("");
   const [showSurvey, setShowSurvey] = useState(true);
+  const [userState, setUserState] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filterRequestType, setFilterRequestType] = useState("");
   const [specificFilter, setSpecificFilter] = useState("");

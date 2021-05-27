@@ -74,7 +74,13 @@ class Graph extends Component {
   componentDidMount() {
 
     var that = this;
-    fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/responses/ct/10', { mode: 'cors' })
+    const requestOptions = {
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': "Bearer" + "\xa0" + `${localStorage.getItem("acc_tok")}`
+      }
+    }
+    fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/responses/ct/10', requestOptions, { mode: 'cors' })
       .then(function (response) {
         return response.json();
       })
@@ -111,4 +117,4 @@ const styles = {
     height: 400,
   }
 }
-export default Graph;                            
+export default Graph;
