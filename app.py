@@ -196,8 +196,12 @@ def filter_queries():
     date_filtered = db.session.query(Survey).filter(Survey.time_of_submit.between(date1, date2)) if len(date1) != 0 and len(date2) != 0 else joined.all()
     date_ids = [d.response_id for d in date_filtered]
     all_ids = age_ids + zip_ids + date_ids
-    result = {i for i in all_ids if all_ids.count(i) == 3}
-    return success_response(list(result))
+    # result = {i for i in all_ids if all_ids.count(i) == 3}
+    survey_ids = list(all_ids)
+    return success_response(list(all_ids))
+    filtered = Survey.query.filter_by(response_id in survey_ids, question_id=10)
+    all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
+    return success_response(dict(all_cts))
     
 
 def surveyJSON(response_id):
