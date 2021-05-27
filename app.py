@@ -34,7 +34,7 @@ app.config['JWT_SECRET_KEY'] = 'secret'  # Change this!
 
 jwt = JWTManager(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # initialize app
@@ -167,8 +167,14 @@ def add_survey():
 @jwt_required()
 def get_cts(id):
     filtered = Survey.query.filter_by(question_id=id)
-    all_cts = db.session.query(Survey.answer_text).filter_by(question_id=id).count(Survey.answer_text).group_by(Survey.answer_text).all()
-    return success_response(dict(all_cts))
+    all_cts = {}
+    for f in filtered:
+        print(f.answer_text)
+        if f.answer_text not in all_cts:
+            all_cts[f.answer_text] = 1
+        else:
+            all_cts[f.answer_text] += 1
+    return success_response(all_cts)
 
 
 @app.route('/addressed/<int:response_id>/', methods=["POST"])
