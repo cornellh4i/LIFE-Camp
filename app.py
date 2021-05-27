@@ -109,6 +109,7 @@ def add_question():
 def all_responses():
     result = []
     for res in Survey.query.with_entities(Survey.response_id).distinct():
+        # TODO: Change if there is time (to not give out tuple results)
         id = int(res[0])
         j = surveyJSON(id)
         result.append(j)
@@ -163,7 +164,7 @@ def add_survey():
 
 
 @app.route('/responses/ct/<int:id>/')
-# @jwt_required()
+@jwt_required()
 def get_cts(id):
     filtered = Survey.query.filter_by(question_id=id)
     all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
