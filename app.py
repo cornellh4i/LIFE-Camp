@@ -148,15 +148,16 @@ def add_response():
 # @jwt_required()
 def add_survey():
     body = json.loads(request.data)
-    response_id = body.get("response_id")
     responses = body.get("responses")
-    print(type(responses))
-    if not response_id or not responses:
+    if not responses:
         return failure_response("Missing required field")
     added = []
+    ids = [r[0] for r in Survey.query.with_entities(Survey.response_id)]
+    new_id = 1
+    if ids != []:
+        new_id = max(ids)+1
     for r in responses:
-        print(r)
-        new_r = Survey(response_id=response_id, description=r.get("description"), answer_text=r.get("answer_text"), question_id=r.get("question_id"))
+        new_r = Survey(response_id=new_id, description=r.get("description"), answer_text=r.get("answer_text"), question_id=r.get("question_id"))
         db.session.add(new_r)
         db.session.commit()
         added.append(new_r.serialize())
