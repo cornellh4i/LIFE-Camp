@@ -187,7 +187,7 @@ def mark_addressed(response_id):
     return success_response(survey)
 
 
-@app.route('/filter/')
+@app.route('/filter/', methods=['POST'])
 # @jwt_required()
 def filter_queries():
     body = json.loads(request.data)
