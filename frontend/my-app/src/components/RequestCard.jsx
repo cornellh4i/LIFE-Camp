@@ -3,6 +3,72 @@ import Phone from './images/Phone.png';
 import Message from './images/Message.png';
 import { useState } from 'react';
 
+
+var React = require('react');
+var Component = React.Component;
+
+class RequestCards extends Component {
+  constructor(props) {
+    super(props);
+    this.state =
+      { surveys: [] }
+  }
+
+  render() {
+    var filters = this.props.filterList;
+    console.log(filters)
+    var requests = this.state.surveys;
+    const zipcode = filters[0];
+    const neighbourhood = filters[1];
+    const completed = filters[2] == "Yes";
+    const requestType = filters[3];
+    const isEmergency = filters[4] == "Yes";
+    var zipcodeFiltered = requests.filter(r => (zipcode == "All" || zipcode == "" || r.answers[3] == zipcode));
+    var neighbourhoodFiltered = zipcodeFiltered.filter(r => (neighbourhood == "All" || neighbourhood == "" || r.answers[4] == neighbourhood));
+    var completedFiltered = neighbourhoodFiltered.filter(r => (completed == "All" || completed == "" || r.addressed == completed));
+    var requestTypeFiltered = completedFiltered.filter(r => requestType == "All" || requestType == "" || r.answers[10] == requestType);
+    var filteredRequest = requestTypeFiltered.filter(r => isEmergency == "All" || isEmergency == "" || r.answers[12] == isEmergency);
+    var cards = []
+    for (var i = 0; i < filteredRequest.length; i++) {
+      var req = filteredRequest[i];
+      var ans = req.answers
+      var emergency = ans[12] == "Yes"
+      var ele = <RequestCard
+        name={ans[0]}
+        phone={ans[1]}
+        email={ans[2]}
+        requestTag={ans[10]}
+        emergency={emergency}
+        requestText={ans[11]}
+      />
+      cards.push(ele)
+    }
+
+    return cards
+  }
+
+  componentDidMount() {
+    var that = this;
+
+    fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/responses/')
+      .then(response => response.json())
+      .then((jsonData) => {
+        var data = jsonData.data
+        console.log(data)
+        return data
+      }).then(data => {
+        that.setState({ surveys: data });
+        that.setState({ filteredSurveys: data })
+      }
+      )
+      .catch((error) => {
+        console.error(error)
+      })
+
+  }
+
+}
+
 const RequestCard = props => {
 
   const [moreInfo, setMoreInfo] = useState(false);
@@ -38,7 +104,7 @@ const RequestCard = props => {
           {props.emergency ?
             <div style={styles.emergencyContainer}>
               <img style={{ display: "inline" }} src={Danger} />
-              <label style={{ fontSize: "14 px" }}>Emergency</label>
+              <label style={{ fontSize: "5 px" }}>Emergency</label>
             </div>
             :
             <></>
@@ -66,7 +132,6 @@ const RequestCard = props => {
           {props.emergency ?
             <div style={styles.emergencyContainer}>
               <img style={{ display: "inline" }} src={Danger} />
-              <label style={{ fontSize: "14 px" }}>Emergency</label>
             </div>
             :
             <></>
@@ -116,7 +181,7 @@ const styles = ({
   },
   moreInfo: {
     display: "inline",
-    marginLeft: "10%",
+    marginLeft: "13%",
     background: "none",
     borderWidth: 0,
     fontSize: 15,
@@ -127,11 +192,12 @@ const styles = ({
     color: "black"
   },
   emergencyContainer: {
+    fontSize: 14,
     display: "flex",
-    flexDirection: "row", 
+    flexDirection: "row",
     float: "left",
     height: "3%",
-    width: "35%",
+    width: "13%",
     backgroundColor: "#FFB383",
     marginLeft: "1%",
     marginRight: "5%",
@@ -142,4 +208,4 @@ const styles = ({
   }
 })
 
-export default RequestCard; 
+export default RequestCards;

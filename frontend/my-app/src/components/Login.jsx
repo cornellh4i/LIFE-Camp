@@ -13,6 +13,7 @@ export default function Login(props) {
       method: 'POST',
       body: JSON.stringify({ username: username, password: password })
     };
+    console.log(JSON.stringify({ username: username, password: password }));
     fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/token/auth', requestOptions, { mode: 'cors' })
       .then(function (response) {
         return response.json();
@@ -57,7 +58,7 @@ export default function Login(props) {
         <Button block bsSize="large" disabled={!performValidation()}
           type="submit">
           Login
-          </Button>
+        </Button>
       </form>
     </div>
   );

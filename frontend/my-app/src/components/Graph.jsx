@@ -20,6 +20,7 @@ class Graph extends Component {
     this.state = {
       dataPoints: [],
     }
+    this.datapoints = []
   }
 
   render() {
@@ -71,8 +72,47 @@ class Graph extends Component {
     );
 
   }
-  componentDidMount() {
 
+  componentDidUpdate(props) {
+    var trendsFilters = props.trendsFilters;
+    console.log(trendsFilters);
+    if (trendsFilters.length) {
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': "Bearer" + "\xa0" + `${localStorage.getItem("acc_tok")}`
+        },
+        body: JSON.stringify({ zipcode: trendsFilters[0], age: trendsFilters[1], start_date: trendsFilters[2], end_date: trendsFilters[3] })
+      }
+      console.log(requestOptions);
+      fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/filter/', requestOptions)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          data = data.data;
+          var graphData = [];
+          for (var name in data) {
+            console.log(name);
+            graphData.push({
+              label: name,
+              y: data[name]
+            });
+          }
+          return graphData
+        }).then(graphData => {
+          this.setState({ dataPoints: graphData });
+          console.log(this.state.dataPoints);
+        }
+        )
+        .catch((error) => {
+          console.error('Error:', error);
+        });;
+    }
+  }
+
+  componentDidMount() {
     var that = this;
     const requestOptions = {
       headers: {
@@ -80,7 +120,7 @@ class Graph extends Component {
         'Authorization': "Bearer" + "\xa0" + `${localStorage.getItem("acc_tok")}`
       }
     }
-    fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/responses/ct/10', requestOptions, { mode: 'cors' })
+    fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/responses/ct/11', requestOptions)
       .then(function (response) {
         return response.json();
       })
@@ -88,7 +128,6 @@ class Graph extends Component {
         data = data.data;
         var graphData = [];
         for (var name in data) {
-          console.log(name);
           graphData.push({
             label: name,
             y: data[name]
@@ -103,7 +142,6 @@ class Graph extends Component {
       .catch((error) => {
         console.error('Error:', error);
       });;
-
   }
 }
 const styles = {

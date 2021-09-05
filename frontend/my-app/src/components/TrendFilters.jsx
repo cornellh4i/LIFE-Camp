@@ -1,16 +1,17 @@
 import Select from './Select';
 import { useState } from 'react';
+import DatePicker from 'react-date-picker';
 
 
 const FilterSideBar = props => {
 
   const [settings, setSettings] = useState([]);
   const [zipCode, setZipcode] = useState("");
-  const [neighborhood, setNeighborhood] = useState("");
-  const [completed, setCompleted] = useState("");
-  const [request, setRequestType] = useState("");
-  const [emergency, setEmergency] = useState("");
+  const [age, setAge] = useState("");
   const [saved, setSaved] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
 
   function handleChange(event, setFunction) {
     // setSaved(false);
@@ -19,20 +20,40 @@ const FilterSideBar = props => {
 
   function onSave(event) {
     event.preventDefault();
-    setSettings([zipCode, neighborhood, completed, request, emergency])
+    console.log(startDate);
+    setSettings(["Location: " + zipCode, "Age: " + age, "Start Date: " + formatDate(startDate), "End Date: " + formatDate(startDate)])
     setSaved(true);
-    props.setSelectedFilters([zipCode, neighborhood, completed, request, emergency])
+    props.onSaveTrendFilters([zipCode, age, formatDate(startDate), formatDate(endDate)]);
+  }
+
+  function formatDate(dateStr) {
+    if (dateStr === null) {
+      return "";
+    }
+    var localeDateString = dateStr.toLocaleDateString();
+    var dateList = localeDateString.split("/");
+    for (var i = 0; i < dateList.length; i++) {
+      if (dateList[i].length == 1) {
+        dateList[i] = "0" + dateList[i];
+      }
+    }
+    var month = dateList[0];
+    var date = dateList[1];
+    var year = dateList[2];
+    return year + "-" + month + "-" + date;
+
   }
 
   return (
     <div style={styles.filters}>
       <label className="form-mobile"> Location </label>
       <Select request={true} placeholder={"Choose Zip Code"} handleChange={e => handleChange(e, setZipcode)} values={props.zipcodeList} />
-      <Select request={true} placeholder={"Neighborhood"} handleChange={e => handleChange(e, setNeighborhood)} values={props.neighborhoodList} />
-      <label style={styles.label}>Request</label>
-      <Select className="form-mobile" request={true} placeholder={"Completed?"} handleChange={e => handleChange(e, setCompleted)} values={["All", "Yes", "No"]} />
-      <Select request={true} placeholder={"Request Type"} handleChange={e => handleChange(e, setRequestType)} values={props.requestsList} />
-      <Select request={true} placeholder={"Emergency?"} handleChange={e => handleChange(e, setEmergency)} values={["All", "Yes", "No"]} />
+      <label style={styles.label}>Age</label>
+      <Select className="form-mobile" request={true} placeholder={"Choose age range"} handleChange={e => handleChange(e, setAge)} values={props.ageList} />
+      <label style={styles.label}>Start Date</label>
+      <DatePicker style={styles.datePicker} onChange={setStartDate} value={startDate} />
+      <label style={styles.label}>End Date</label>
+      <DatePicker style={styles.datePicker} onChange={setEndDate} value={endDate} />
       <label style={styles.label}>Current settings </label>
       {
         saved ?
@@ -93,6 +114,10 @@ const styles = {
     borderWidth: 1,
     marginTop: 20,
     marginLeft: 60,
+  },
+  datePicker: {
+    paddingTop: 20,
+    marginBottom: "5%"
   }
 }
 
