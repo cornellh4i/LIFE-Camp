@@ -1,0 +1,13 @@
+1,name,text,all
+2,phone number,text,all
+3,email,text,all
+4,zipcode,option,all
+5,neighbourhood,option,all
+6,age,option,all
+7,gender,option,all
+8,family members,option,all
+9,number of children,option,all
+10,number of seniors,option,all
+11,request type,option,all
+12,request detail,text,all
+13,emergency?,option,all

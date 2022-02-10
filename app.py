@@ -1,4 +1,5 @@
 import csv
+import sys
 import datetime
 from db import db 
 from db import Question, Survey
@@ -16,7 +17,7 @@ from flask_sqlalchemy import SQLAlchemy
 from form import LoginForm
 import json
 import os
-from sqlalchemy import func
+from sqlalchemy import func, and_
 import sqlite3
 
 #post reponse: responseID, question, and the separate answers
@@ -203,11 +204,18 @@ def filter_queries():
     date_filtered = db.session.query(Survey).filter(Survey.time_of_submit.between(date1, date2)) if len(date1) != 0 and len(date2) != 0 else joined.all()
     date_ids = [d.response_id for d in date_filtered]
     all_ids = age_ids + zip_ids + date_ids
-    # result = {i for i in all_ids if all_ids.count(i) == 3}
-    survey_ids = list(all_ids)
-    filtered = Survey.query.filter_by(response_id in survey_ids, question_id=11)
-    all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
-    return success_response(dict(all_cts))
+    result = [i for i in all_ids if all_ids.count(i) == 39]
+    filtered = Survey.query.filter(and_(Survey.response_id.in_(result), Survey.question_id==11))
+    all_cts = {}
+    for f in filtered:
+        print(f.answer_text)
+        if f.answer_text not in all_cts:
+            all_cts[f.answer_text] = 1
+        else:
+            all_cts[f.answer_text] += 1
+    # all_cts = db.session.query(Survey.answer_text, func.count(Survey.answer_text)).group_by(Survey.answer_text).all()
+    # TODO: TURN INTO PROPER DICTIONARY
+    return success_response(all_cts)
     
 
 def surveyJSON(response_id):
@@ -251,5 +259,5 @@ if __name__ == '__main__':
     convertToCSV()
     surveyJSON(2)
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)
     
