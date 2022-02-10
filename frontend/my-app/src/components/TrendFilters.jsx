@@ -9,18 +9,17 @@ const FilterSideBar = props => {
   const [zipCode, setZipcode] = useState("");
   const [age, setAge] = useState("");
   const [saved, setSaved] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
 
   function handleChange(event, setFunction) {
-    // setSaved(false);
+    console.log("filter value: ", event.target.value)
     setFunction(event.target.value);
   }
 
   function onSave(event) {
     event.preventDefault();
-    console.log(startDate);
     setSettings(["Location: " + zipCode, "Age: " + age, "Start Date: " + formatDate(startDate), "End Date: " + formatDate(startDate)])
     setSaved(true);
     props.onSaveTrendFilters([zipCode, age, formatDate(startDate), formatDate(endDate)]);
@@ -33,7 +32,7 @@ const FilterSideBar = props => {
     var localeDateString = dateStr.toLocaleDateString();
     var dateList = localeDateString.split("/");
     for (var i = 0; i < dateList.length; i++) {
-      if (dateList[i].length == 1) {
+      if (dateList[i].length === 1) {
         dateList[i] = "0" + dateList[i];
       }
     }

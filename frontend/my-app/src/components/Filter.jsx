@@ -7,9 +7,6 @@ const Filter = props => {
       setValue(selectedVal.target.value);
       props.handleChange(selectedVal);
       props.addFilter([... props.selectedFilters, value]);
-      // updateFilters();
-      console.log(value);
-      console.log(props.selectedFilter);
     };
 
     function updateFilters(){

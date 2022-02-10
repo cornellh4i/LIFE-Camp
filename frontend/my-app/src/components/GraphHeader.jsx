@@ -1,6 +1,4 @@
 const GraphHeader = props => {
-  // props.selected === true when trends is selected and false when requests is selected
-  console.log(props.trends)
   function goToTrends(event) {
     props.setTrends(true);
     event.preventDefault();

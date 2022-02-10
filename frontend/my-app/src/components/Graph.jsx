@@ -1,9 +1,13 @@
 import CanvasJSReact from '../canvasjs.react';
+import TrendFilters from './TrendFilters'
 
 var React = require('react');
 var Component = React.Component;
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+const zipCodeList = ["All", "11411", "11412", "11413", "11423", "11429/11428", "11434", "11435/11436"]
+const ageList = ["0 - 10", "11 - 20", "21 - 30", "31 - 40", "41 - 50", "51 - 60", "61 - 70", "71 - 80", "81 - 90", "91 - 100"]
+
 
 CanvasJS.addColorSet("ColorSet",
   [
@@ -14,16 +18,29 @@ CanvasJS.addColorSet("ColorSet",
     "orange"
   ]);
 
+function arrayEquals(a, b) {
+  return Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index]);
+}
+
+
 class Graph extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataPoints: [],
+      updated: false,
+      trendsFilters: [],
     }
-    this.datapoints = []
+    // this.datapoints = []
+  }
+  onSaveTrendFilters = (filters) => {
+    this.setState({updated: false, trendsFilters: filters})
   }
 
-  render() {
+  render() {  
     const options = {
       title: {
         text: "Type of Requests For Users",
@@ -62,39 +79,40 @@ class Graph extends Component {
       ]
     }
     return (
+      <div style={styles.trends}>
+        <TrendFilters zipcodeList={zipCodeList} ageList={ageList} onSaveTrendFilters={this.onSaveTrendFilters} />
 
-      <div style={styles.graph}>
-
-        <CanvasJSChart options={options}
-          onRef={ref => this.chart = ref}
-        />
+        <div style={styles.graph}>
+          <CanvasJSChart options={options}
+            onRef={ref => this.chart = ref}
+          />
+        </div>
       </div>
     );
 
   }
 
-  componentDidUpdate(props) {
-    var trendsFilters = props.trendsFilters;
-    console.log(trendsFilters);
-    if (trendsFilters.length) {
+  componentDidUpdate() {
+    console.log("filters: ", this.state.trendsFilters)
+    if (this.state.trendsFilters.length) {
+      console.log(localStorage.getItem("acc_tok"))
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
           'Authorization': "Bearer" + "\xa0" + `${localStorage.getItem("acc_tok")}`
         },
-        body: JSON.stringify({ zipcode: trendsFilters[0], age: trendsFilters[1], start_date: trendsFilters[2], end_date: trendsFilters[3] })
+        body: JSON.stringify({ zipcode: this.state.trendsFilters[0], age: this.state.trendsFilters[1], start_date: this.state.trendsFilters[2], end_date: this.state.trendsFilters[3] })
       }
-      console.log(requestOptions);
       fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/filter/', requestOptions)
         .then(function (response) {
           return response.json();
         })
         .then(function (data) {
+          console.log(data)
           data = data.data;
-          var graphData = [];
+          let graphData = [];
           for (var name in data) {
-            console.log(name);
             graphData.push({
               label: name,
               y: data[name]
@@ -102,8 +120,11 @@ class Graph extends Component {
           }
           return graphData
         }).then(graphData => {
-          this.setState({ dataPoints: graphData });
-          console.log(this.state.dataPoints);
+          if (arrayEquals(graphData, this.state.dataPoints) === false && this.state.updated === false) {
+            // console.log("graph data: ", graphData)
+            // console.log("state.datapoints: ", this.state.dataPoints)
+            this.setState({ updated:true, dataPoints: graphData });
+          }
         }
         )
         .catch((error) => {
@@ -136,7 +157,6 @@ class Graph extends Component {
         return graphData
       }).then(graphData => {
         that.setState({ dataPoints: graphData });
-        console.log(this.state.dataPoints);
       }
       )
       .catch((error) => {

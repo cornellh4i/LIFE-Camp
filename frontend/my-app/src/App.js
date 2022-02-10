@@ -10,7 +10,7 @@ import LargeTextQ from './components/LargeTextQ';
 import lifeCampLogo from '../src/lifeCampLogo.png';
 import Multichoice from './components/Multichoice';
 import Graph from './components/Graph';
-import TrendFilters from './components/TrendFilters'
+// import TrendFilters from './components/TrendFilters'
 import Filter from './components/Filter';
 import ActiveFilters from './components/ActiveFilters';
 import FilterSideBar from './components/FilterSideBar';
@@ -33,7 +33,7 @@ function App() {
   const [request, setRequest] = useState("");
   const [emergency, setEmergency] = useState("");
   const [showSurvey, setShowSurvey] = useState(true);
-  const [trendsFilters, setTrendsFilters] = useState([]);
+  // const [trendsFilters, setTrendsFilters] = useState([]);
   const [userState, setUserState] = useState("");
   const [selectedFilters, setSelectedFilters] = useState(["All", "All", "All", "All", "All"]);
   const [filterRequestType, setFilterRequestType] = useState("");
@@ -62,7 +62,7 @@ function App() {
     event.preventDefault();
     var fields = [name, phone, email, zipcode, neighbourhood, age, gender, numPeople, numChildren, numSeniors, requestType, request, emergency]
     for (var i = 0; i < fields.length; i++) {
-      if (fields[i] == "") {
+      if (fields[i] === "") {
         alert("Please fill in all fields before submitting!");
         return;
       }
@@ -135,7 +135,6 @@ function App() {
       }
     ]
     var responseList = responseObjs.map(JSON.stringify);
-    console.log(responseList);
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify({ responses: responseObjs }),
@@ -153,10 +152,10 @@ function App() {
       });;
   }
 
-  function onSaveTrendFilters(filters) {
-    setTrendsFilters(filters);
+  // function onSaveTrendFilters(filters) {
+  //   setTrendsFilters(filters);
 
-  }
+  // }
 
   function handleChange(event, setFunction) {
     setFunction(event.target.value);
@@ -212,14 +211,14 @@ function App() {
 
 
           {trends ?
-            <div style={styles.trends}>
-              <TrendFilters handleChange={handleChange} zipcodeList={zipCodeList} ageList={ageList} onSaveTrendFilters={onSaveTrendFilters} />
+            // <div style={styles.trends}>
+            //   <TrendFilters handleChange={handleChange} zipcodeList={zipCodeList} ageList={ageList} onSaveTrendFilters={onSaveTrendFilters} />
 
               <div>
-                <Graph trendsFilters={trendsFilters} />
+                <Graph />
               </div>
 
-            </div>
+            // </div>
             :
             <div style={styles.requests}>
               <FilterSideBar handleChange={handleChange} setFilterRequestType={setFilterRequestType} zipcodeList={zipCodeList} neighborhoodList={neighborhoodList} requestsList={requestsList} setSelectedFilters={setSelectedFilters} />

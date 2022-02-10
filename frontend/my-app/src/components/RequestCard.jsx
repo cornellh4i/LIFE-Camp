@@ -16,13 +16,12 @@ class RequestCards extends Component {
 
   render() {
     var filters = this.props.filterList;
-    console.log(filters)
     var requests = this.state.surveys;
     const zipcode = filters[0];
     const neighbourhood = filters[1];
-    const completed = filters[2] == "Yes";
+    const completed = filters[2] === "Yes";
     const requestType = filters[3];
-    const isEmergency = filters[4] == "Yes";
+    const isEmergency = filters[4];
     var zipcodeFiltered = requests.filter(r => (zipcode == "All" || zipcode == "" || r.answers[3] == zipcode));
     var neighbourhoodFiltered = zipcodeFiltered.filter(r => (neighbourhood == "All" || neighbourhood == "" || r.answers[4] == neighbourhood));
     var completedFiltered = neighbourhoodFiltered.filter(r => (completed == "All" || completed == "" || r.addressed == completed));

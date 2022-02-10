@@ -13,7 +13,6 @@ export default function Login(props) {
       method: 'POST',
       body: JSON.stringify({ username: username, password: password })
     };
-    console.log(JSON.stringify({ username: username, password: password }));
     fetch('https://desolate-caverns-62377.herokuapp.com/https://life-camp-dashboard.herokuapp.com/token/auth', requestOptions, { mode: 'cors' })
       .then(function (response) {
         return response.json();
@@ -24,7 +23,7 @@ export default function Login(props) {
         var success = data.login
         return [accessToken, refreshToken, success]
       }).then(data_lst => {
-        if (data_lst[2] == true) {
+        if (data_lst[2] === true) {
           localStorage.setItem("acc_tok", data_lst[0]);
           localStorage.setItem("ref_tok", data_lst[1])
           props.handler(false)

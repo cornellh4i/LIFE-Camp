@@ -13,7 +13,6 @@ const FilterSideBar = props => {
   const [saved, setSaved] = useState(false);
 
   function handleChange(event, setFunction) {
-    // setSaved(false);
     setFunction(event.target.value);
   }
 
@@ -22,6 +21,7 @@ const FilterSideBar = props => {
     setSettings([zipCode, neighborhood, completed, request, emergency])
     setSaved(true);
     props.setSelectedFilters([zipCode, neighborhood, completed, request, emergency])
+    
   }
 
   return (

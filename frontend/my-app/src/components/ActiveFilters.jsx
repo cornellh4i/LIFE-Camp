@@ -13,10 +13,8 @@ const ActiveFilter = props => {
       // event.preventDefault();
       const newList = props.selectedFilters.filter((item) => item != val && item!="");
       props.setSelectedFilters(newList); 
-      console.log('value:', val)
     }
 
-    console.log(props.selectedFilters);
     return (
       <div>
         {props.selectedFilters[1].map((val) =>  
